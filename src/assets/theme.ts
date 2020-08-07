@@ -8,7 +8,7 @@ const theme = createMuiTheme({
       main: colors.blue,
     },
     secondary: {
-      main: colors.nickel,
+      main: colors.blueSecondary,
     },
     tonalOffset: 0.05,
     action: {},

@@ -1,5 +1,5 @@
 const colors = {
-  blue: "#0353A4",
-  nickel: "#726E60",
+  blue: "#138fff",
+  blueSecondary: "#0075DF",
 };
 export default colors;
