@@ -3,17 +3,25 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import { Link } from "react-router-dom";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-
+import HomeOutlinedIcon from "@material-ui/icons/HomeOutlined";
+import PhotoCameraOutlinedIcon from "@material-ui/icons/PhotoCameraOutlined";
+import MovieCreationOutlinedIcon from "@material-ui/icons/MovieCreationOutlined";
 import { createStyles, makeStyles, Theme, withTheme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import styled from "styled-components";
-import { Menu, MenuItem, Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 
 const Nav = withTheme(styled(Link)`
-  padding: 0 ${(props) => props.theme.spacing(1)}px;
+  padding: 12px ${(props) => props.theme.spacing(1)}px;
   font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `);
+
+const NavText = styled.span`
+  margin: 0px 4px 0px;
+`;
 
 const Main = styled.div``;
 
@@ -33,16 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header: React.FunctionComponent = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Main>
@@ -52,36 +50,20 @@ const Header: React.FunctionComponent = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Photos
+            Guillaume Damiens
           </Typography>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={open}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-          </Menu>
-          <Nav to="/">Home</Nav>
+          <Nav to="/">
+            <HomeOutlinedIcon />
+            <NavText>Home</NavText>
+          </Nav>
+          <Nav to="/photos">
+            <PhotoCameraOutlinedIcon />
+            <NavText>Photos</NavText>
+          </Nav>
+          <Nav to="/videos">
+            <MovieCreationOutlinedIcon />
+            <NavText>Vidéos</NavText>
+          </Nav>
         </Toolbar>
       </AppBar>
     </Main>

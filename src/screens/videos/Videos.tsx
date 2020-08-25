@@ -2,12 +2,12 @@ import React from "react";
 
 import Body from "components/body";
 
-const Home: React.FC = () => {
+const Videos: React.FC = () => {
   return (
     <Body>
-      <div>Hello Home !</div>
+      <div>Vidéos</div>
     </Body>
   );
 };
 
-export default Home;
+export default Videos;
