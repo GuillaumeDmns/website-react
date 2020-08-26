@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
     menuButton: {
       marginRight: theme.spacing(2),
     },
-    title: {
+    width: {
       flexGrow: 1,
     },
   })
@@ -49,7 +49,7 @@ const Header: React.FunctionComponent = () => {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.width}>
             Guillaume Damiens
           </Typography>
           <Nav to="/">
