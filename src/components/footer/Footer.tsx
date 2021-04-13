@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import { withTheme } from "@material-ui/core";
-import dayjs from "dayjs";
+
+import CURRENT_YEAR from "utils/date.utils";
 
 const Container = withTheme(styled.main`
   display: flex;
@@ -13,7 +14,7 @@ const Container = withTheme(styled.main`
 
 const Footer: React.FC = () => (
   <Container>
-    <span>© {dayjs().year()} Copyright: Guillaume Damiens</span>
+    <span>© {CURRENT_YEAR} Copyright: Guillaume Damiens</span>
   </Container>
 );
 
