@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -8,19 +9,28 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import Body from "components/body";
-import api from "api/api";
-import LOCAL_STORAGE from "utils/authentication.utils";
+import action from "store/actions";
+import { IRootState } from "store/types";
 
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const dispatch = useDispatch();
+
+  const isAuthenticated: boolean = useSelector(((state: IRootState) => state.authentication.isAuthenticated))
+
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
   const handleClickCloseLoginDialog = () => setLoginDialogOpen(false);
 
-  const handleSubmitLogin = async () => {
-    api.authentication.signIn(login, password).then((value: string) => localStorage.setItem(LOCAL_STORAGE.JWT, value));
+  const handleSubmitLogin = () => {
+    dispatch(action.authentication.loginUser(login, password));
+    setLoginDialogOpen(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(action.authentication.logoutUser());
   };
 
   const handleChangeLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,9 +43,16 @@ const Home: React.FC = () => {
 
   return (
     <Body>
-      <Button size="medium" variant="outlined" color="primary" onClick={handleClickOpenLoginDialog}>
-        Se connecter
-      </Button>
+      {isAuthenticated ? (
+        <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
+          Se déconnecter
+        </Button>
+      ) : (
+        <Button size="medium" variant="outlined" color="primary" onClick={handleClickOpenLoginDialog}>
+          Se connecter
+        </Button>
+      )}
+
       <Dialog open={loginDialogOpen} onClose={handleClickCloseLoginDialog} aria-labelledby="form-dialog-title">
         <DialogTitle>Connexion</DialogTitle>
         <DialogContent>

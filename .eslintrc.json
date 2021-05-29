@@ -21,6 +21,7 @@
   "rules": {
     "no-param-reassign": 0,
     "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/no-explicit-any": 0,
     "prettier/prettier": 0
   }
 }

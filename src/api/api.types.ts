@@ -142,3 +142,7 @@ export interface Tarif {
   viaLine?: Line;
   viaReseau?: Reseau;
 }
+
+export interface Jwt {
+  jwt?: string;
+}

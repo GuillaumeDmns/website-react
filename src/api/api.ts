@@ -1,9 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import endpoints from "./endpoints";
 import LOCAL_STORAGE from "../utils/authentication.utils";
+import { Jwt } from "./api.types";
 
 axios.defaults.baseURL = "https://guillaumedamiens.com/api";
+// axios.defaults.baseURL = "http://localhost:8080/api";
 axios.defaults.timeout = 20000;
 axios.defaults.withCredentials = true;
 
@@ -13,14 +15,14 @@ const axs = axios.create({
 
 const api = {
   authentication: {
-    signIn: (username: string, password: string): Promise<string> => {
-      return axs.post(endpoints.authentication.signIn, {
+    signIn: (username: string, password: string): Promise<AxiosResponse<Jwt>> => {
+      return axs.post<Jwt>(endpoints.authentication.signIn, {
         username,
         password,
       });
     },
-    refresh: (): Promise<string> => {
-      return axs.get(endpoints.authentication.refresh);
+    refresh: (): Promise<AxiosResponse<Jwt>> => {
+      return axs.get<Jwt>(endpoints.authentication.refresh);
     },
   },
 };
@@ -52,5 +54,15 @@ axs.interceptors.request.use(async (request) => {
 
   return request;
 });
+
+axs.interceptors.response.use(
+  async (response) => {
+    return response;
+  },
+  async (error) => {
+    throw error;
+  }
+
+)
 
 export default api;
