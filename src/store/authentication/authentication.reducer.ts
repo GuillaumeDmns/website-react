@@ -1,6 +1,5 @@
-import LOCAL_STORAGE from "utils/authentication.utils";
+import { LOCAL_STORAGE } from "utils/authentication.utils";
 import { ACTION_TYPES, AuthenticationActionTypes, IAuthenticationState } from "./authentication.types";
-
 
 const initialState: IAuthenticationState = {
   isAuthenticated: !!localStorage.getItem(LOCAL_STORAGE.JWT),

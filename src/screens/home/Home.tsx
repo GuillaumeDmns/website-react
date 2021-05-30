@@ -19,7 +19,7 @@ const Home: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const isAuthenticated: boolean = useSelector(((state: IRootState) => state.authentication.isAuthenticated))
+  const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
   const handleClickCloseLoginDialog = () => setLoginDialogOpen(false);

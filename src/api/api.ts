@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
+import { LOCAL_STORAGE, getUsableToken } from "utils/authentication.utils";
 import endpoints from "./endpoints";
-import LOCAL_STORAGE from "../utils/authentication.utils";
 import { Jwt } from "./api.types";
 
 axios.defaults.baseURL = "https://guillaumedamiens.com/api";
@@ -28,21 +28,14 @@ const api = {
 };
 
 axs.interceptors.request.use(async (request) => {
-  const token = localStorage.getItem(LOCAL_STORAGE.JWT);
+  const { url = "" } = request;
+  let token = "";
 
-  axs.defaults.headers.common = {
-    Authorization: token,
-  };
-
-  if (request.headers) {
-    request.headers.Authorization = token;
+  if (url.includes(endpoints.authentication.signIn) || url.includes(endpoints.authentication.refresh)) {
+    token = localStorage.getItem(LOCAL_STORAGE.JWT) || "";
+  } else {
+    token = await getUsableToken();
   }
-
-  return request;
-});
-
-axs.interceptors.request.use(async (request) => {
-  const token = localStorage.getItem(LOCAL_STORAGE.JWT);
 
   axs.defaults.headers.common = {
     Authorization: token,
@@ -62,7 +55,6 @@ axs.interceptors.response.use(
   async (error) => {
     throw error;
   }
-
-)
+);
 
 export default api;

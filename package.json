@@ -17,6 +17,7 @@
     "axios": "^0.21.1",
     "dayjs": "^1.10.5",
     "install": "^0.13.0",
+    "jwt-decode": "^3.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.18.1",
@@ -33,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "format": "prettier . --write",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "eslint . --ext .jsx,.ts,.tsx --fix",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

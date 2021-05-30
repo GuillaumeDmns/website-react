@@ -1,7 +1,7 @@
 import * as authentication from "./authentication/authentication.actions";
 
 export const actions = {
-  authentication
+  authentication,
 };
 
 export default actions;

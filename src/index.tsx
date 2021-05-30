@@ -9,7 +9,6 @@ import theme from "./assets/theme";
 import "assets/styles/common.css";
 import store from "./store";
 
-
 ReactDOM.render(
   <>
     <Provider store={store}>
