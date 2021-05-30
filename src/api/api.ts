@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
+// ts-ignore
 import { LOCAL_STORAGE, getUsableToken } from "utils/authentication.utils";
 import endpoints from "./endpoints";
 import { Jwt } from "./api.types";
