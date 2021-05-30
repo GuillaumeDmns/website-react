@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 // ts-ignore
 import { LOCAL_STORAGE, getUsableToken } from "utils/authentication.utils";
 import endpoints from "./endpoints";
-import { Jwt } from "./api.types";
+import { JwtDTO, LinesDTO, ReseauxDTO } from "./api.types";
 
 axios.defaults.baseURL = "https://guillaumedamiens.com/api";
 // axios.defaults.baseURL = "http://localhost:8080/api";
@@ -16,14 +16,27 @@ const axs = axios.create({
 
 const api = {
   authentication: {
-    signIn: (username: string, password: string): Promise<AxiosResponse<Jwt>> => {
-      return axs.post<Jwt>(endpoints.authentication.signIn, {
+    signIn: (username: string, password: string): Promise<AxiosResponse<JwtDTO>> => {
+      return axs.post<JwtDTO>(endpoints.authentication.signIn, {
         username,
         password,
       });
     },
-    refresh: (): Promise<AxiosResponse<Jwt>> => {
-      return axs.get<Jwt>(endpoints.authentication.refresh);
+    refresh: (): Promise<AxiosResponse<JwtDTO>> => {
+      return axs.get<JwtDTO>(endpoints.authentication.refresh);
+    },
+  },
+
+  ratp: {
+    getReseaux: (): Promise<AxiosResponse<ReseauxDTO>> => {
+      return axs.get<ReseauxDTO>(endpoints.ratp.getReseaux);
+    },
+    getLinesByReseauId: (reseauId: string): Promise<AxiosResponse<LinesDTO>> => {
+      return axs.get<ReseauxDTO>(endpoints.ratp.getLinesByReseauId, {
+        params: {
+          reseauId,
+        },
+      });
     },
   },
 };
@@ -39,11 +52,11 @@ axs.interceptors.request.use(async (request) => {
   }
 
   axs.defaults.headers.common = {
-    Authorization: token,
+    Authorization: `Bearer ${token}`,
   };
 
   if (request.headers) {
-    request.headers.Authorization = token;
+    request.headers.Authorization = `Bearer ${token}`;
   }
 
   return request;

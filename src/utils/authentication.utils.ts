@@ -36,7 +36,7 @@ export const getUsableToken = (): string => {
   }
 
   if (jwtDecoded && jwtDecoded.exp && jwtDecoded.iat) {
-    if (jwtDecoded.iat + (jwtDecoded.exp - jwtDecoded.iat) * 0.75 < new Date().getTime()) {
+    if (jwtDecoded.iat + (jwtDecoded.exp - jwtDecoded.iat) * 0.75 < new Date().getTime() / 1000) {
       refreshToken();
     }
   }

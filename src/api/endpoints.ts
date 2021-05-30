@@ -1,7 +1,11 @@
 const endpoints = {
   authentication: {
     signIn: `signin`,
-    refresh: `signin`,
+    refresh: `refresh`,
+  },
+  ratp: {
+    getReseaux: `reseaux`,
+    getLinesByReseauId: `lines`,
   },
 };
 

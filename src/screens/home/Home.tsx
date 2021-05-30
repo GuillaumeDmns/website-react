@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -7,19 +7,39 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
+import { Reseau } from "api/api.types";
+import api from "api/api";
 
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [reseaux, setReseaux] = useState<Array<Reseau>>([]);
+
+  const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const dispatch = useDispatch();
 
-  const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
+  useEffect(() => {
+    (async function loadReseaux() {
+      if (isAuthenticated) {
+        try {
+          const response = await api.ratp.getReseaux();
+          if (response && response.data && response.data.reseaux) {
+            setReseaux(response.data.reseaux);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [isAuthenticated]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
   const handleClickCloseLoginDialog = () => setLoginDialogOpen(false);
@@ -44,9 +64,30 @@ const Home: React.FC = () => {
   return (
     <Body>
       {isAuthenticated ? (
-        <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
-          Se déconnecter
-        </Button>
+        <>
+          <Autocomplete
+            id="country-select-demo"
+            style={{ width: 300 }}
+            size="small"
+            options={reseaux as Array<Reseau>}
+            autoHighlight
+            renderOption={(reseau: Reseau) => reseau.name || ""}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Choisissez un réseau"
+                variant="outlined"
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: "new-password", // disable autocomplete and autofill
+                }}
+              />
+            )}
+          />
+          <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
+            Se déconnecter
+          </Button>
+        </>
       ) : (
         <Button size="medium" variant="outlined" color="primary" onClick={handleClickOpenLoginDialog}>
           Se connecter

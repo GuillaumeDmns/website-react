@@ -1,3 +1,8 @@
+export interface Credentials {
+  password?: string;
+  username?: string;
+}
+
 export interface Direction {
   line?: Line;
   name?: string;
@@ -16,6 +21,10 @@ export interface GeoPoint {
 
   /** @format double */
   y?: number;
+}
+
+export interface JwtDTO {
+  jwt?: string;
 }
 
 export interface Line {
@@ -41,7 +50,7 @@ export interface LineCustom {
 export interface LinesDTO {
   /** @format date-time */
   currentDate?: string;
-  lines?: LineCustom[];
+  lines?: RATPLine[];
 }
 
 export interface MissionCustom {
@@ -63,6 +72,23 @@ export interface NextMissionsDTO {
   requestedDate?: string;
 }
 
+export interface RATPLine {
+  code?: string;
+  codeStif?: string;
+  id?: string;
+  image?: string;
+  name?: string;
+  realm?: string;
+  reseauId?: string;
+}
+
+export interface RATPReseau {
+  code?: string;
+  id?: string;
+  image?: string;
+  name?: string;
+}
+
 export interface Reseau {
   code?: string;
   id?: string;
@@ -75,6 +101,12 @@ export interface ReseauCustom {
   id?: string;
   image?: string;
   name?: string;
+}
+
+export interface ReseauxDTO {
+  /** @format date-time */
+  currentDate?: string;
+  reseaux?: RATPReseau[];
 }
 
 export interface Station {
@@ -141,8 +173,4 @@ export interface Tarif {
   pleinTarif?: number;
   viaLine?: Line;
   viaReseau?: Reseau;
-}
-
-export interface Jwt {
-  jwt?: string;
 }
