@@ -71,16 +71,13 @@ const Home: React.FC = () => {
             size="small"
             options={reseaux as Array<Reseau>}
             autoHighlight
+            getOptionLabel={(reseau: Reseau) => reseau.name || ""}
             renderOption={(reseau: Reseau) => reseau.name || ""}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Choisissez un réseau"
                 variant="outlined"
-                inputProps={{
-                  ...params.inputProps,
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
               />
             )}
           />
