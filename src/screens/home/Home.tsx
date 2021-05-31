@@ -12,14 +12,19 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
-import { Reseau } from "api/api.types";
+import { Line, Reseau } from "api/api.types";
 import api from "api/api";
+import { Grid } from "@material-ui/core";
 
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [reseaux, setReseaux] = useState<Array<Reseau>>([]);
+  const [selectedReseau, setSelectedReseau] = React.useState<Reseau | null>(null);
+  const [lines, setLines] = useState<Array<Line>>([]);
+  const [selectedLine, setSelectedLine] = React.useState<Line | null>(null);
+
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -32,6 +37,7 @@ const Home: React.FC = () => {
           const response = await api.ratp.getReseaux();
           if (response && response.data && response.data.reseaux) {
             setReseaux(response.data.reseaux);
+            setSelectedLine(null);
           }
         } catch (e) {
           // eslint-disable-next-line
@@ -40,6 +46,22 @@ const Home: React.FC = () => {
       }
     })();
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    (async function loadLines() {
+      if (selectedReseau && selectedReseau.id) {
+        try {
+          const response = await api.ratp.getLinesByReseauId(selectedReseau.id);
+          if (response && response.data && response.data.lines) {
+            setLines(response.data.lines);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [selectedReseau]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
   const handleClickCloseLoginDialog = () => setLoginDialogOpen(false);
@@ -64,27 +86,46 @@ const Home: React.FC = () => {
   return (
     <Body>
       {isAuthenticated ? (
-        <>
-          <Autocomplete
-            id="country-select-demo"
-            style={{ width: 300 }}
-            size="small"
-            options={reseaux as Array<Reseau>}
-            autoHighlight
-            getOptionLabel={(reseau: Reseau) => reseau.name || ""}
-            renderOption={(reseau: Reseau) => reseau.name || ""}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Choisissez un réseau"
-                variant="outlined"
-              />
-            )}
-          />
-          <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
-            Se déconnecter
-          </Button>
-        </>
+        <Grid container direction="column" spacing={2} alignItems="center">
+          <Grid item>
+
+            <Autocomplete
+              value={selectedReseau}
+              onChange={(event: any, newSelectedReseau: Reseau | null) => {
+                setSelectedReseau(newSelectedReseau);
+              }}
+              style={{ width: 300 }}
+              size="small"
+              options={reseaux as Array<Reseau>}
+              autoHighlight
+              getOptionLabel={(reseau: Reseau) => reseau.name || ""}
+              renderOption={(reseau: Reseau) => reseau.name || ""}
+              renderInput={(params) => <TextField {...params} label="Choisissez un réseau" variant="outlined" />}
+            />
+          </Grid>
+
+          <Grid item>
+            <Autocomplete
+              value={selectedLine}
+              onChange={(event: any, newSelectedLine: Reseau | null) => {
+                setSelectedLine(newSelectedLine);
+              }}
+              style={{ width: 300 }}
+              size="small"
+              options={lines as Array<Line>}
+              autoHighlight
+              getOptionLabel={(line: Line) => line.name || ""}
+              renderOption={(line: Line) => line.name || ""}
+              renderInput={(params) => <TextField {...params} label="Choisissez une ligne" variant="outlined" />}
+              disabled={!selectedReseau}
+            />
+          </Grid>
+          <Grid item>
+            <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
+              Se déconnecter
+            </Button>
+          </Grid>
+        </Grid>
       ) : (
         <Button size="medium" variant="outlined" color="primary" onClick={handleClickOpenLoginDialog}>
           Se connecter
