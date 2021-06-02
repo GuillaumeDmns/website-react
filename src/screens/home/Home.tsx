@@ -12,7 +12,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
-import { Line, Reseau } from "api/api.types";
+import { RATPLine, RATPReseau, RATPStation } from "api/api.types";
 import api from "api/api";
 import { Grid } from "@material-ui/core";
 
@@ -20,11 +20,12 @@ const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [reseaux, setReseaux] = useState<Array<Reseau>>([]);
-  const [selectedReseau, setSelectedReseau] = React.useState<Reseau | null>(null);
-  const [lines, setLines] = useState<Array<Line>>([]);
-  const [selectedLine, setSelectedLine] = React.useState<Line | null>(null);
-
+  const [reseaux, setReseaux] = useState<Array<RATPReseau>>([]);
+  const [selectedReseau, setSelectedReseau] = React.useState<RATPReseau | null>(null);
+  const [lines, setLines] = useState<Array<RATPLine>>([]);
+  const [selectedLine, setSelectedLine] = React.useState<RATPLine | null>(null);
+  const [stations, setStations] = useState<Array<RATPStation>>([]);
+  const [selectedStation, setSelectedStation] = React.useState<RATPStation | null>(null);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -63,6 +64,22 @@ const Home: React.FC = () => {
     })();
   }, [selectedReseau]);
 
+  useEffect(() => {
+    (async function loadStations() {
+      if (selectedReseau && selectedReseau.id && selectedLine && selectedLine.id) {
+        try {
+          const response = await api.ratp.getStationsByLineIdAndStationName(selectedLine.id, "*");
+          if (response && response.data && response.data.stations) {
+            setStations(response.data.stations);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [selectedReseau, selectedLine]);
+
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
   const handleClickCloseLoginDialog = () => setLoginDialogOpen(false);
 
@@ -88,38 +105,60 @@ const Home: React.FC = () => {
       {isAuthenticated ? (
         <Grid container direction="column" spacing={2} alignItems="center">
           <Grid item>
-
             <Autocomplete
               value={selectedReseau}
-              onChange={(event: any, newSelectedReseau: Reseau | null) => {
+              onChange={(event: any, newSelectedReseau: RATPReseau | null) => {
+                setSelectedStation(null);
+                setSelectedLine(null);
                 setSelectedReseau(newSelectedReseau);
               }}
               style={{ width: 300 }}
               size="small"
-              options={reseaux as Array<Reseau>}
+              options={reseaux as Array<RATPReseau>}
               autoHighlight
-              getOptionLabel={(reseau: Reseau) => reseau.name || ""}
-              renderOption={(reseau: Reseau) => reseau.name || ""}
+              getOptionLabel={(reseau: RATPReseau) => reseau.name || ""}
+              renderOption={(reseau: RATPReseau) => reseau.name || ""}
               renderInput={(params) => <TextField {...params} label="Choisissez un réseau" variant="outlined" />}
             />
           </Grid>
 
-          <Grid item>
-            <Autocomplete
-              value={selectedLine}
-              onChange={(event: any, newSelectedLine: Reseau | null) => {
-                setSelectedLine(newSelectedLine);
-              }}
-              style={{ width: 300 }}
-              size="small"
-              options={lines as Array<Line>}
-              autoHighlight
-              getOptionLabel={(line: Line) => line.name || ""}
-              renderOption={(line: Line) => line.name || ""}
-              renderInput={(params) => <TextField {...params} label="Choisissez une ligne" variant="outlined" />}
-              disabled={!selectedReseau}
-            />
-          </Grid>
+          {selectedReseau && (
+            <Grid item>
+              <Autocomplete
+                value={selectedLine}
+                onChange={(event: any, newSelectedLine: RATPReseau | null) => {
+                  setSelectedStation(null);
+                  setSelectedLine(newSelectedLine);
+                }}
+                style={{ width: 300 }}
+                size="small"
+                options={lines as Array<RATPLine>}
+                autoHighlight
+                getOptionLabel={(line: RATPLine) => line.name || ""}
+                renderOption={(line: RATPLine) => line.name || ""}
+                renderInput={(params) => <TextField {...params} label="Choisissez une ligne" variant="outlined" />}
+              />
+            </Grid>
+          )}
+
+          {selectedReseau && selectedLine && (
+            <Grid item>
+              <Autocomplete
+                value={selectedStation}
+                onChange={(event: any, newSelectedStation: RATPStation | null) => {
+                  setSelectedStation(newSelectedStation);
+                }}
+                style={{ width: 300 }}
+                size="small"
+                options={stations as Array<RATPStation>}
+                autoHighlight
+                getOptionLabel={(station: RATPStation) => station.name || ""}
+                renderOption={(station: RATPStation) => station.name || ""}
+                renderInput={(params) => <TextField {...params} label="Choisissez une station/arrêt" variant="outlined" />}
+              />
+            </Grid>
+          )}
+
           <Grid item>
             <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
               Se déconnecter

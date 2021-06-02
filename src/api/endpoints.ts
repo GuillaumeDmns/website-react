@@ -6,6 +6,7 @@ const endpoints = {
   ratp: {
     getReseaux: `reseaux`,
     getLinesByReseauId: `lines`,
+    getStationsByLineId: `stations`,
   },
 };
 
