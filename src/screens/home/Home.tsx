@@ -8,13 +8,19 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { Grid } from "@material-ui/core";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/fr";
 
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
-import { RATPLine, RATPReseau, RATPStation } from "api/api.types";
+import { MissionCustom, RATPLine, RATPReseau, RATPStation } from "api/api.types";
 import api from "api/api";
-import { Grid } from "@material-ui/core";
+
+dayjs.extend(relativeTime);
+dayjs.locale("fr");
 
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
@@ -26,6 +32,7 @@ const Home: React.FC = () => {
   const [selectedLine, setSelectedLine] = React.useState<RATPLine | null>(null);
   const [stations, setStations] = useState<Array<RATPStation>>([]);
   const [selectedStation, setSelectedStation] = React.useState<RATPStation | null>(null);
+  const [nextMissions, setNextMissions] = React.useState<Array<MissionCustom>>([]);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -37,8 +44,10 @@ const Home: React.FC = () => {
         try {
           const response = await api.ratp.getReseaux();
           if (response && response.data && response.data.reseaux) {
-            setReseaux(response.data.reseaux);
             setSelectedLine(null);
+            setSelectedStation(null);
+            setNextMissions([]);
+            setReseaux(response.data.reseaux);
           }
         } catch (e) {
           // eslint-disable-next-line
@@ -54,6 +63,8 @@ const Home: React.FC = () => {
         try {
           const response = await api.ratp.getLinesByReseauId(selectedReseau.id);
           if (response && response.data && response.data.lines) {
+            setSelectedStation(null);
+            setNextMissions([]);
             setLines(response.data.lines);
           }
         } catch (e) {
@@ -70,6 +81,7 @@ const Home: React.FC = () => {
         try {
           const response = await api.ratp.getStationsByLineIdAndStationName(selectedLine.id, "*");
           if (response && response.data && response.data.stations) {
+            setNextMissions([]);
             setStations(response.data.stations);
           }
         } catch (e) {
@@ -79,6 +91,22 @@ const Home: React.FC = () => {
       }
     })();
   }, [selectedReseau, selectedLine]);
+
+  useEffect(() => {
+    (async function loadStations() {
+      if (selectedReseau && selectedReseau.id && selectedLine && selectedLine.id && selectedStation && selectedStation.id) {
+        try {
+          const response = await api.ratp.getNextMissionsByLineAndStation(selectedLine.id, selectedStation.id);
+          if (response && response.data && response.data.nextMissions) {
+            setNextMissions(response.data.nextMissions);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [selectedReseau, selectedLine, selectedStation]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
   const handleClickCloseLoginDialog = () => setLoginDialogOpen(false);
@@ -156,6 +184,20 @@ const Home: React.FC = () => {
                 renderOption={(station: RATPStation) => station.name || ""}
                 renderInput={(params) => <TextField {...params} label="Choisissez une station/arrêt" variant="outlined" />}
               />
+            </Grid>
+          )}
+
+          {selectedReseau && selectedLine && selectedStation && (
+            <Grid item container direction="column" spacing={2} alignItems="center">
+              {nextMissions.length > 0 ? (
+                nextMissions.map((mission: MissionCustom) => (
+                  <Grid key={mission.id} item>
+                    Direction <b>{mission.direction}</b> : {dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()}
+                  </Grid>
+                ))
+              ) : (
+                <p>Pas de prochains départs prévus !</p>
+              )}
             </Grid>
           )}
 

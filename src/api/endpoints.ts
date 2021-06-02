@@ -7,6 +7,7 @@ const endpoints = {
     getReseaux: `reseaux`,
     getLinesByReseauId: `lines`,
     getStationsByLineId: `stations`,
+    getNextMissionsByLineAndStation: `next`,
   },
 };
 
