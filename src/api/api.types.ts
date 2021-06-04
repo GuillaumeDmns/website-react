@@ -21,6 +21,7 @@ export interface MissionCustom {
   nextPassage?: string;
   platform?: string;
   stationStop?: boolean;
+  stationEndLine?: string;
 }
 
 export interface NextMissionsDTO {

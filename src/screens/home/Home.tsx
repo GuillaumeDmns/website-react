@@ -92,20 +92,25 @@ const Home: React.FC = () => {
     })();
   }, [selectedReseau, selectedLine]);
 
+  const getStations = async () => {
+    if (selectedReseau && selectedReseau.id && selectedLine && selectedLine.id && selectedStation && selectedStation.id) {
+      try {
+        const response = await api.ratp.getNextMissionsByLineAndStation(selectedLine.id, selectedStation.id);
+        if (response && response.data && response.data.nextMissions) {
+          setNextMissions(response.data.nextMissions);
+        }
+      } catch (e) {
+        // eslint-disable-next-line
+        console.log(e);
+      }
+    }
+  };
+
   useEffect(() => {
     (async function loadStations() {
-      if (selectedReseau && selectedReseau.id && selectedLine && selectedLine.id && selectedStation && selectedStation.id) {
-        try {
-          const response = await api.ratp.getNextMissionsByLineAndStation(selectedLine.id, selectedStation.id);
-          if (response && response.data && response.data.nextMissions) {
-            setNextMissions(response.data.nextMissions);
-          }
-        } catch (e) {
-          // eslint-disable-next-line
-          console.log(e);
-        }
-      }
+      await getStations();
     })();
+    // eslint-disable-next-line
   }, [selectedReseau, selectedLine, selectedStation]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
@@ -191,8 +196,9 @@ const Home: React.FC = () => {
             <Grid item container direction="column" spacing={2} alignItems="center">
               {nextMissions.length > 0 ? (
                 nextMissions.map((mission: MissionCustom) => (
-                  <Grid key={mission.id} item>
-                    Direction <b>{mission.direction}</b> : {dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()}
+                  <Grid key={`${mission.id}-${mission.nextPassage}`} item>
+                    Direction <b>{mission.stationEndLine}</b> : {dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()} (
+                    {dayjs(mission.nextPassage, "YYYYMMDDHHmm").format("HH:mm")})
                   </Grid>
                 ))
               ) : (
@@ -200,11 +206,19 @@ const Home: React.FC = () => {
               )}
             </Grid>
           )}
-
-          <Grid item>
-            <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
-              Se déconnecter
-            </Button>
+          <Grid item container justify="center" spacing={2}>
+            {selectedReseau && selectedLine && selectedStation && (
+              <Grid item>
+                <Button size="medium" variant="outlined" color="primary" onClick={getStations}>
+                  Recharger
+                </Button>
+              </Grid>
+            )}
+            <Grid item>
+              <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
+                Se déconnecter
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       ) : (
