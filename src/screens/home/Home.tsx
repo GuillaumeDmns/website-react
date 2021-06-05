@@ -167,8 +167,8 @@ const Home: React.FC = () => {
                 size="small"
                 options={lines as Array<RATPLine>}
                 autoHighlight
-                getOptionLabel={(line: RATPLine) => line.name || ""}
-                renderOption={(line: RATPLine) => line.name || ""}
+                getOptionLabel={(line: RATPLine) => (line.code ? `${line.code} : ` : "") + line.name || ""}
+                renderOption={(line: RATPLine) => (line.code ? `${line.code} : ` : "") + line.name || ""}
                 renderInput={(params) => <TextField {...params} label="Choisissez une ligne" variant="outlined" />}
               />
             </Grid>
@@ -197,7 +197,8 @@ const Home: React.FC = () => {
               {nextMissions.length > 0 ? (
                 nextMissions.map((mission: MissionCustom) => (
                   <Grid key={`${mission.id}-${mission.nextPassage}`} item>
-                    Direction <b>{mission.stationEndLine}</b> : {dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()} (
+                    Direction <b>{mission.direction}</b> :
+                    {mission.messages ? mission.messages : dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()} (
                     {dayjs(mission.nextPassage, "YYYYMMDDHHmm").format("HH:mm")})
                   </Grid>
                 ))
