@@ -6,22 +6,22 @@
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.58",
-    "@testing-library/jest-dom": "^5.13.0",
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
     "@types/jest": "^26.0.23",
-    "@types/node": "^15.12.1",
-    "@types/react": "^17.0.9",
-    "@types/react-dom": "^17.0.6",
+    "@types/node": "^15.12.4",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.8",
     "@types/react-router-dom": "^5.1.5",
-    "@types/styled-components": "^5.1.2",
+    "@types/styled-components": "^5.1.10",
     "axios": "^0.21.1",
     "dayjs": "^1.10.5",
     "install": "^0.13.0",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-intl": "^5.20.1",
+    "react-intl": "^5.20.2",
     "react-player": "^2.6.1",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
@@ -29,8 +29,8 @@
     "redux": "^4.1.0",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.3.0",
-    "swagger-typescript-api": "^9.1.1",
-    "typescript": "~4.3.2"
+    "swagger-typescript-api": "^9.1.2",
+    "typescript": "~4.3.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -56,8 +56,8 @@
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
-    "@typescript-eslint/parser": "^4.26.0",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
     "eslint-config-airbnb-typescript-prettier": "^4.2.0",
     "prettier": "2.3.1"
   }

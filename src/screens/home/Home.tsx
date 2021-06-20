@@ -197,7 +197,7 @@ const Home: React.FC = () => {
               {nextMissions.length > 0 ? (
                 nextMissions.map((mission: MissionCustom) => (
                   <Grid key={`${mission.id}-${mission.nextPassage}`} item>
-                    Direction <b>{mission.direction}</b> :
+                    Direction <b>{mission.direction}</b> : {" "}
                     {mission.messages ? mission.messages : dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()} (
                     {dayjs(mission.nextPassage, "YYYYMMDDHHmm").format("HH:mm")})
                   </Grid>
