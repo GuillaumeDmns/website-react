@@ -8,6 +8,7 @@ const endpoints = {
     getLinesByReseauId: `lines`,
     getStationsByLineId: `stations`,
     getNextMissionsByLineAndStation: `next`,
+    getFullMissionByLine: `full-mission`,
   },
 };
 

@@ -3,6 +3,13 @@ export interface Credentials {
   username?: string;
 }
 
+export interface FullMissionDTO {
+  /** @format date-time */
+  currentDate?: string;
+  links?: PairStringString[];
+  stationsDTO?: StationsDTO;
+}
+
 export interface JwtDTO {
   jwt?: string;
 }
@@ -31,6 +38,11 @@ export interface NextMissionsDTO {
   currentDate?: string;
   nextMissions?: MissionCustom[];
   requestedDate?: string;
+}
+
+export interface PairStringString {
+  first?: string;
+  second?: string;
 }
 
 export interface RATPLine {

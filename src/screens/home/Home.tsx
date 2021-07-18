@@ -12,12 +12,14 @@ import { Grid } from "@material-ui/core";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
+import { ForceGraph2D } from "react-force-graph";
 
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
 import { MissionCustom, RATPLine, RATPReseau, RATPStation } from "api/api.types";
 import api from "api/api";
+import { GraphData } from "utils/types.utils";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -33,6 +35,8 @@ const Home: React.FC = () => {
   const [stations, setStations] = useState<Array<RATPStation>>([]);
   const [selectedStation, setSelectedStation] = React.useState<RATPStation | null>(null);
   const [nextMissions, setNextMissions] = React.useState<Array<MissionCustom>>([]);
+  const [displayGraph, setDisplayGraph] = React.useState<boolean>(true);
+  const [graphData, setGraphData] = React.useState<GraphData>({ nodes: [], links: [] });
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -107,6 +111,38 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
+    (async function loadGraph() {
+      if (displayGraph) {
+        try {
+          const response = await api.ratp.getFullMissionByLine("M3");
+          if (response && response.data) {
+            setGraphData({
+              nodes:
+                response.data.stationsDTO?.stations?.map((station) => {
+                  return {
+                    id: station.id || "",
+                    name: station.name || "",
+                    val: 1,
+                  };
+                }) || [],
+              links:
+                response.data.links?.map((link) => {
+                  return {
+                    source: link.first || "",
+                    target: link.second || "",
+                  };
+                }) || [],
+            });
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [displayGraph]);
+
+  useEffect(() => {
     (async function loadStations() {
       await getStations();
     })();
@@ -132,6 +168,31 @@ const Home: React.FC = () => {
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
   };
+
+  const handleChangeGraphStatus = () => {
+    setDisplayGraph(!displayGraph);
+  };
+
+  //   const graphData = {
+  //     "nodes": [
+  //       {
+  //         "id": "id1",
+  //         "name": "name1",
+  //         "val": 1
+  //       },
+  //       {
+  //         "id": "id2",
+  //         "name": "name2",
+  //         "val": 10
+  //       },
+  //     ],
+  //     "links": [
+  //       {
+  //         "source": "id1",
+  //         "target": "id2"
+  //       },
+  //     ]
+  // }
 
   return (
     <Body>
@@ -197,7 +258,7 @@ const Home: React.FC = () => {
               {nextMissions.length > 0 ? (
                 nextMissions.map((mission: MissionCustom) => (
                   <Grid key={`${mission.direction}-${mission.nextPassage}-${mission.messages}`} item>
-                    Direction <b>{mission.direction}</b> : {" "}
+                    Direction <b>{mission.direction}</b> :{" "}
                     {mission.messages ? mission.messages : dayjs(mission.nextPassage, "YYYYMMDDHHmm").fromNow()} (
                     {dayjs(mission.nextPassage, "YYYYMMDDHHmm").format("HH:mm")})
                   </Grid>
@@ -207,6 +268,13 @@ const Home: React.FC = () => {
               )}
             </Grid>
           )}
+
+          {displayGraph && (
+            <Grid item>
+              <ForceGraph2D graphData={graphData} width={900} height={700} />
+            </Grid>
+          )}
+
           <Grid item container justify="center" spacing={2}>
             {selectedReseau && selectedLine && selectedStation && (
               <Grid item>
@@ -215,6 +283,11 @@ const Home: React.FC = () => {
                 </Button>
               </Grid>
             )}
+            <Grid item>
+              <Button size="medium" variant="outlined" color="primary" onClick={handleChangeGraphStatus}>
+                Graph
+              </Button>
+            </Grid>
             <Grid item>
               <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
                 Se déconnecter
