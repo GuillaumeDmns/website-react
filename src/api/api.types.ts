@@ -6,7 +6,7 @@ export interface Credentials {
 export interface FullMissionDTO {
   /** @format date-time */
   currentDate?: string;
-  links?: PairStringString[];
+  links?: ConnexionCount[];
   stationsDTO?: StationsDTO;
 }
 
@@ -40,9 +40,10 @@ export interface NextMissionsDTO {
   requestedDate?: string;
 }
 
-export interface PairStringString {
-  first?: string;
-  second?: string;
+export interface ConnexionCount {
+  left?: string;
+  middle?: string;
+  right?: number;
 }
 
 export interface RATPLine {

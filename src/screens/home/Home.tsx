@@ -112,9 +112,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     (async function loadGraph() {
-      if (displayGraph) {
+      if (selectedReseau && selectedReseau.id && selectedLine && selectedLine.id && displayGraph) {
         try {
-          const response = await api.ratp.getFullMissionByLine("M3");
+          const response = await api.ratp.getFullMissionByLine(selectedLine.id);
           if (response && response.data) {
             setGraphData({
               nodes:
@@ -128,8 +128,9 @@ const Home: React.FC = () => {
               links:
                 response.data.links?.map((link) => {
                   return {
-                    source: link.first || "",
-                    target: link.second || "",
+                    source: link.left || "",
+                    target: link.middle || "",
+                    value: link.right || 0,
                   };
                 }) || [],
             });
@@ -140,7 +141,7 @@ const Home: React.FC = () => {
         }
       }
     })();
-  }, [displayGraph]);
+  }, [displayGraph, selectedReseau, selectedLine]);
 
   useEffect(() => {
     (async function loadStations() {
@@ -269,9 +270,9 @@ const Home: React.FC = () => {
             </Grid>
           )}
 
-          {displayGraph && (
+          {selectedReseau && selectedLine && displayGraph && (
             <Grid item>
-              <ForceGraph2D graphData={graphData} width={900} height={700} />
+              <ForceGraph2D graphData={graphData} width={900} height={700} linkDirectionalParticles="value" />
             </Grid>
           )}
 
