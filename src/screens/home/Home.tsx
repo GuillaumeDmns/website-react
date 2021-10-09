@@ -154,27 +154,6 @@ const Home: React.FC = () => {
     setDisplayGraph(!displayGraph);
   };
 
-  //   const graphData = {
-  //     "nodes": [
-  //       {
-  //         "id": "id1",
-  //         "name": "name1",
-  //         "val": 1
-  //       },
-  //       {
-  //         "id": "id2",
-  //         "name": "name2",
-  //         "val": 10
-  //       },
-  //     ],
-  //     "links": [
-  //       {
-  //         "source": "id1",
-  //         "target": "id2"
-  //       },
-  //     ]
-  // }
-
   return (
     <Body>
       {isAuthenticated ? (
@@ -252,7 +231,7 @@ const Home: React.FC = () => {
 
           {selectedReseau && selectedLine && displayGraph && (
             <Grid item>
-              <ForceGraph2D graphData={graphData} width={900} height={700} linkDirectionalParticles="value" />
+              <ForceGraph2D graphData={graphData} width={900} height={700} linkDirectionalParticles="value" backgroundColor="#DCDCDC" />
             </Grid>
           )}
 
