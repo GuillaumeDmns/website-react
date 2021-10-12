@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { Grid } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
@@ -31,6 +31,7 @@ const Home: React.FC = () => {
   const [nextMissions, setNextMissions] = React.useState<Array<MissionCustom>>([]);
   const [displayGraph, setDisplayGraph] = React.useState<boolean>(true);
   const [graphData, setGraphData] = React.useState<GraphData>({ nodes: [], links: [] });
+  const [isGraphLoading, setIsGraphLoading] = React.useState<boolean>(false);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -107,6 +108,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     (async function loadGraph() {
       if (selectedReseau && selectedReseau.id && selectedLine && selectedLine.id && displayGraph) {
+        setIsGraphLoading(true);
         try {
           const response = await api.ratp.getFullMissionByLine(selectedLine.id);
           if (response && response.data) {
@@ -133,6 +135,7 @@ const Home: React.FC = () => {
           // eslint-disable-next-line
           console.log(e);
         }
+        setIsGraphLoading(false);
       }
     })();
   }, [displayGraph, selectedReseau, selectedLine]);
@@ -231,7 +234,11 @@ const Home: React.FC = () => {
 
           {selectedReseau && selectedLine && displayGraph && (
             <Grid item>
-              <ForceGraph2D graphData={graphData} width={900} height={700} linkDirectionalParticles="value" backgroundColor="#DCDCDC" />
+              {isGraphLoading ? (
+                <CircularProgress />
+              ) : (
+                <ForceGraph2D graphData={graphData} width={900} height={700} linkDirectionalParticles="value" backgroundColor="#DCDCDC" />
+              )}
             </Grid>
           )}
 

@@ -17,7 +17,7 @@ const axs = axios.create({
 const api = {
   authentication: {
     signIn: (username: string, password: string): Promise<AxiosResponse<JwtDTO>> => {
-      return axs.post<JwtDTO>(endpoints.authentication.signIn, {
+      return axs.post(endpoints.authentication.signIn, {
         username,
         password,
       });
@@ -73,10 +73,6 @@ axs.interceptors.request.use(async (request) => {
   } else {
     token = await getUsableToken();
   }
-
-  axs.defaults.headers.common = {
-    Authorization: `Bearer ${token}`,
-  };
 
   if (request.headers) {
     request.headers.Authorization = `Bearer ${token}`;
