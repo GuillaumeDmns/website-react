@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -9,6 +9,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
 import { ForceGraph2D } from "react-force-graph";
 
+import styled from "styled-components";
+import mapboxgl from "mapbox-gl";
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
@@ -17,8 +19,19 @@ import api from "api/api";
 import { GraphData } from "utils/types.utils";
 import LoginDialog from "components/dialog";
 
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
+
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
+mapboxgl.accessToken = "pk.eyJ1IjoiZ3VpbGxhdW1lZG1ucyIsImEiOiJja3Y5ejdtYjMwYTJuMzFwZ292eTZtbHE5In0.d3ZU8GezLxJHmfZsfYgqbw";
+
+const MainMapContainer = styled.div`
+  height: 500px;
+  width: 800px;
+`;
 
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
@@ -36,6 +49,23 @@ const Home: React.FC = () => {
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const dispatch = useDispatch();
+
+  const mapContainer = useRef<any>(null);
+  const map = useRef<any>(null);
+  const [lng] = useState(2.349014);
+  const [lat] = useState(48.864716);
+  const [zoom] = useState(11);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    if (map.current) return; // initialize map only once
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [lng, lat],
+      zoom,
+    }); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
 
   useEffect(() => {
     (async function loadReseaux() {
@@ -259,6 +289,11 @@ const Home: React.FC = () => {
               <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
                 Se déconnecter
               </Button>
+            </Grid>
+          </Grid>
+          <Grid item container justify="center" spacing={2}>
+            <Grid item>
+              <MainMapContainer ref={mapContainer} className="map-container" />
             </Grid>
           </Grid>
         </Grid>
