@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 
 import DefaultLayout from "layouts/DefaultLayout";
 import Home from "screens/home";
@@ -9,11 +9,11 @@ import Videos from "screens/videos";
 const AppRouter: React.FunctionComponent = () => (
   <Router>
     <DefaultLayout>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/photos" component={Photos} />
-        <Route exact path="/videos" component={Videos} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/photos" element={<Photos/>}/>
+        <Route path="/videos" element={<Videos/>}/>
+      </Routes>
     </DefaultLayout>
   </Router>
 );
