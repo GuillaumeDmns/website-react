@@ -28,31 +28,18 @@ const NavText = styled('span')(`
 
 const Main = styled('div')(`
 `
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    width: {
-      flexGrow: 1,
-    },
-  })
 );
 
 const Header: React.FunctionComponent = () => {
-  const classes = useStyles();
 
   return (
     <Main>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.width}>
+          <Typography variant="h6">
             Guillaume Damiens
           </Typography>
           <Nav to="/">
