@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import { CircularProgress, Grid } from "@material-ui/core";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import { CircularProgress, Grid } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
@@ -21,8 +21,7 @@ import LoginDialog from "components/dialog";
 
 // @ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
-
+// mapboxgl.workerClass = require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -272,7 +271,7 @@ const Home: React.FC = () => {
             </Grid>
           )}
 
-          <Grid item container justify="center" spacing={2}>
+          <Grid item container justifyContent="center" spacing={2}>
             {selectedReseau && selectedLine && selectedStation && (
               <Grid item>
                 <Button size="medium" variant="outlined" color="primary" onClick={getStations}>
@@ -291,7 +290,7 @@ const Home: React.FC = () => {
               </Button>
             </Grid>
           </Grid>
-          <Grid item container justify="center" spacing={2}>
+          <Grid item container justifyContent="center" spacing={2}>
             <Grid item>
               <MainMapContainer ref={mapContainer} className="map-container" />
             </Grid>

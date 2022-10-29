@@ -1,9 +1,9 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@mui/material";
 
 import colors from "./colors";
 import fonts from "./styles/fonts";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: colors.primary,
@@ -17,7 +17,6 @@ const theme = createMuiTheme({
   typography: {
     fontFamily: [fonts.montserrat, "-apple-system", '"Segoe UI"', "Roboto", "Arial", "sans-serif"].join(","),
   },
-  overrides: {},
 });
 
 export default theme;

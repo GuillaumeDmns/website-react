@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
 import Body from "components/body";
 import MediaContainer from "components/layout";
@@ -16,7 +16,7 @@ import vienna from "images/vienne.jpg";
 const Photos: React.FC = () => {
   return (
     <Body>
-      <Grid container justify="space-evenly" alignContent="space-around" spacing={2}>
+      <Grid container justifyContent="space-evenly" alignContent="space-around" spacing={2}>
         <MediaContainer item>
           <img src={street} alt="street" width="439" height="250" />
         </MediaContainer>

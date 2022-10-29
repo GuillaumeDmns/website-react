@@ -1,9 +1,9 @@
-import { Grid, withStyles } from "@material-ui/core";
+import { Grid, styled } from "@mui/material";
 
-const MediaContainer = withStyles({
-  root: {
-    margin: "15px",
-  },
-})(Grid);
+const MediaContainer = styled(Grid)(
+  ({ theme }) => `
+  margin: ${theme.spacing(2)};
+`
+);
 
 export default MediaContainer;

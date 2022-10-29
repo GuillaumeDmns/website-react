@@ -1,16 +1,17 @@
 import React from "react";
-import styled from "styled-components";
-import { withTheme } from "@material-ui/core";
+import { styled } from "@mui/material";
 
 import CURRENT_YEAR from "utils/date.utils";
 
-const Container = withTheme(styled.main`
+const Container = styled("main")(
+  ({ theme }) => `
   display: flex;
   justify-content: flex-end;
   box-sizing: border-box;
   width: 100%;
-  padding: ${(props) => props.theme.spacing(2)}px ${(props) => props.theme.spacing(4)}px;
-`);
+  padding: ${theme.spacing(2)} ${theme.spacing(4)};
+`
+);
 
 const Footer: React.FC = () => (
   <Container>

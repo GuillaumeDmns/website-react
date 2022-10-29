@@ -10,9 +10,9 @@ const AppRouter: React.FunctionComponent = () => (
   <Router>
     <DefaultLayout>
       <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/photos" element={<Photos/>}/>
-        <Route path="/videos" element={<Videos/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/photos" element={<Photos />} />
+        <Route path="/videos" element={<Videos />} />
       </Routes>
     </DefaultLayout>
   </Router>

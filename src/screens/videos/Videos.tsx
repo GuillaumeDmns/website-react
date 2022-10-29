@@ -1,6 +1,6 @@
 import React from "react";
 import ReactPlayer from "react-player";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
 import Body from "components/body";
 import MediaContainer from "components/layout";
@@ -8,7 +8,7 @@ import MediaContainer from "components/layout";
 const Videos: React.FC = () => {
   return (
     <Body>
-      <Grid container justify="space-evenly" alignContent="space-around">
+      <Grid container justifyContent="space-evenly" alignContent="space-around">
         <MediaContainer>
           <ReactPlayer url="https://youtu.be/4zPo35VufX0" controls />
         </MediaContainer>
