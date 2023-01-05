@@ -3,6 +3,9 @@ const endpoints = {
     signIn: `signin`,
     refresh: `refresh`,
   },
+  idfm: {
+    getLines: `lines`,
+  },
   ratp: {
     getReseaux: `reseaux`,
     getLinesByReseauId: `lines`,

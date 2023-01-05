@@ -24,6 +24,7 @@
     "@typescript-eslint/no-explicit-any": 0,
     "react/jsx-props-no-spreading": "off",
     "react/function-component-definition": 0,
-    "prettier/prettier": 0
+    "prettier/prettier": 0,
+    "default-param-last": 0
   }
 }

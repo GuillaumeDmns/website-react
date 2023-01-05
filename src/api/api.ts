@@ -27,16 +27,15 @@ const api = {
     },
   },
 
+  idfm: {
+    getLines: (): Promise<AxiosResponse<LinesDTO>> => {
+      return axs.get<LinesDTO>(endpoints.idfm.getLines);
+    },
+  },
+
   ratp: {
     getReseaux: (): Promise<AxiosResponse<ReseauxDTO>> => {
       return axs.get<ReseauxDTO>(endpoints.ratp.getReseaux);
-    },
-    getLinesByReseauId: (reseauId: string): Promise<AxiosResponse<LinesDTO>> => {
-      return axs.get<ReseauxDTO>(endpoints.ratp.getLinesByReseauId, {
-        params: {
-          reseauId,
-        },
-      });
     },
     getStationsByLineIdAndStationName: (lineId: string, stationName: string): Promise<AxiosResponse<StationsDTO>> => {
       return axs.get<StationsDTO>(endpoints.ratp.getStationsByLineId, {

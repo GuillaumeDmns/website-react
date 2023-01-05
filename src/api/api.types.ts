@@ -14,11 +14,11 @@ export interface JwtDTO {
   jwt?: string;
 }
 
-export interface LinesDTO {
-  /** @format date-time */
-  currentDate?: string;
-  lines?: RATPLine[];
-}
+// export interface LinesDTO {
+//   /** @format date-time */
+//   currentDate?: string;
+//   lines?: RATPLine[];
+// }
 
 export interface MissionCustom {
   code?: string;
@@ -46,16 +46,6 @@ export interface ConnexionCount {
   right?: number;
 }
 
-export interface RATPLine {
-  code?: string;
-  codeStif?: string;
-  id?: string;
-  image?: string;
-  name?: string;
-  realm?: string;
-  reseauId?: string;
-}
-
 export interface RATPReseau {
   code?: string;
   id?: string;
@@ -80,4 +70,19 @@ export interface StationsDTO {
   /** @format date-time */
   currentDate?: string;
   stations?: RATPStation[];
+}
+
+export interface LinesDTO {
+  lines?: Record<string, IDFMLine[]>;
+  count?: Record<string, number>;
+}
+
+export interface IDFMLine {
+  id?: string;
+  name?: string;
+  transportMode?: "BUS" | "NOCTILIEN" | "METRO" | "TRAM" | "TER" | "TRANSILIEN" | "RER";
+  /** @format int32 */
+  operatorId?: number;
+  lineIdColor?: string;
+  lineIdBackgroundColor?: string;
 }
