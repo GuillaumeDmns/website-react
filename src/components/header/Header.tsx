@@ -1,14 +1,12 @@
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import { Box, styled } from "@mui/material";
 import { Link } from "react-router-dom";
+import MovieCreationOutlinedIcon from "@mui/icons-material/MovieCreationOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PhotoCameraOutlinedIcon from "@mui/icons-material/PhotoCameraOutlined";
-import MovieCreationOutlinedIcon from "@mui/icons-material/MovieCreationOutlined";
-import MenuIcon from "@mui/icons-material/Menu";
-import { styled } from "@mui/material";
 
 const Nav = styled(Link)(
   ({ theme }) => `
@@ -21,36 +19,32 @@ const Nav = styled(Link)(
 );
 
 const NavText = styled("span")(`
-  margin: 0px 4px 0px;
-`);
-
-const Main = styled("div")(`
+  margin: 0px 8px 0px;
 `);
 
 const Header: React.FunctionComponent = () => {
   return (
-    <Main>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6">Guillaume Damiens</Typography>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Guillaume Damiens
+          </Typography>
           <Nav to="/">
             <HomeOutlinedIcon />
-            <NavText>Home</NavText>
+            <NavText>HOME</NavText>
           </Nav>
           <Nav to="/photos">
             <PhotoCameraOutlinedIcon />
-            <NavText>Photos</NavText>
+            <NavText>PHOTOS</NavText>
           </Nav>
           <Nav to="/videos">
             <MovieCreationOutlinedIcon />
-            <NavText>Vidéos</NavText>
+            <NavText>VIDÉOS</NavText>
           </Nav>
         </Toolbar>
       </AppBar>
-    </Main>
+    </Box>
   );
 };
 

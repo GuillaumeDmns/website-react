@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
-import { Grid } from "@mui/material";
+import { ButtonGroup, Grid } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
@@ -31,6 +31,7 @@ const MainMapContainer = styled.div`
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [linesDTO, setLinesDTO] = useState<LinesDTO | null>(null);
+  const [selectedTransportMode, setSelectedTransportMode] = useState<string | null>(null);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -78,35 +79,49 @@ const Home: React.FC = () => {
   return (
     <Body>
       {isAuthenticated ? (
-        <Grid container direction="column" spacing={2} alignItems="center">
-          <Grid item>
-            {linesDTO?.lines &&
-              Object.keys(linesDTO.lines).map((key: string) => (
-                <div id={key}>
-                  <div>
-                    {key} ({(linesDTO?.count && linesDTO.count[key]) || 0})
-                  </div>
-                  <div>{linesDTO?.lines && linesDTO.lines[key].map((idfmLine: IDFMLine) => <p id={idfmLine.id}>{idfmLine.name}</p>)}</div>
-                </div>
+        <Grid container direction="column" spacing={1} alignItems="center">
+          {linesDTO?.lines && (
+            <ButtonGroup size="large" aria-label="large button group">
+              {" "}
+              {Object.keys(linesDTO.lines).map((key: string) => (
+                <Button
+                  key={key}
+                  variant={key === selectedTransportMode ? "outlined" : "contained"}
+                  onClick={() => setSelectedTransportMode(key)}
+                >
+                  {key} ({(linesDTO?.count && linesDTO.count[key]) || 0})
+                </Button>
               ))}
-          </Grid>
-          <Grid item container justifyContent="center" spacing={2}>
+            </ButtonGroup>
+          )}
+          {selectedTransportMode && (
+            <div>
+              {linesDTO?.lines &&
+                linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => <p key={idfmLine.id} id={idfmLine.id}>{idfmLine.name}</p>)}
+            </div>
+          )}
+          <Grid item container justifyContent="center">
             <Grid item>
               <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>
                 Se déconnecter
               </Button>
             </Grid>
           </Grid>
-          <Grid item container justifyContent="center" spacing={2}>
+          <Grid item container justifyContent="center">
             <Grid item>
               <MainMapContainer ref={mapContainer} className="map-container" />
             </Grid>
           </Grid>
         </Grid>
       ) : (
-        <Button size="medium" variant="outlined" color="primary" onClick={handleClickOpenLoginDialog}>
-          Se connecter
-        </Button>
+        <Grid container direction="column" spacing={4} alignItems="center">
+          <Grid item>Connectez-vous pour accéder au contenu</Grid>
+          <Grid item container justifyContent="center" spacing={2}>
+            <Button size="medium" variant="outlined" color="primary" onClick={handleClickOpenLoginDialog}>
+              Se connecter
+            </Button>
+          </Grid>
+        </Grid>
       )}
 
       <LoginDialog loginDialogOpen={loginDialogOpen} setLoginDialogOpen={setLoginDialogOpen} />
