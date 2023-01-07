@@ -85,6 +85,9 @@ axs.interceptors.response.use(
     return response;
   },
   async (error) => {
+    if (error.response.status === 403) {
+      localStorage.removeItem(LOCAL_STORAGE.JWT);
+    }
     throw error;
   }
 );
