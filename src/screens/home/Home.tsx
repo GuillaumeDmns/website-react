@@ -11,9 +11,10 @@ import mapboxgl from "mapbox-gl";
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
-import {IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO} from "api/api.types";
+import { IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO } from "api/api.types";
 import api from "api/api";
 import LoginDialog from "components/dialog";
+import LineImage from "components/line/LineImage";
 
 // @ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
@@ -97,13 +98,13 @@ const Home: React.FC = () => {
   const handleChangeTransportMode = (transportMode: string) => {
     setSelectedLine(null);
     setSelectedTransportMode(transportMode);
-  }
+  };
 
   const handleChangeLine = (lineId?: string) => {
     if (lineId) {
       setSelectedLine(lineId);
     }
-  }
+  };
 
   return (
     <Body>
@@ -124,17 +125,18 @@ const Home: React.FC = () => {
             </ButtonGroup>
           )}
           {selectedTransportMode && (
-            <div>
+            <Grid container justifyContent="center" alignItems="center">
               {linesDTO?.lines &&
-                linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => <span key={idfmLine.id} id={idfmLine.id} onClick={() => handleChangeLine(idfmLine.id)} aria-hidden="true">{idfmLine.name} </span>)}
-            </div>
+                linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => (
+                  <Grid key={idfmLine.id} item onClick={() => handleChangeLine(idfmLine.id)}>
+                    <LineImage line={idfmLine} />
+                  </Grid>
+                ))}
+            </Grid>
           )}
 
           {selectedTransportMode && selectedLine && (
-              <div>
-                {stopsDTO?.stops &&
-                    stopsDTO.stops.map((stop: IDFMStopArea) => <div key={stop.id}>{stop.name}</div>)}
-              </div>
+            <div>{stopsDTO?.stops && stopsDTO.stops.map((stop: IDFMStopArea) => <div key={stop.id}>{stop.name}</div>)}</div>
           )}
           <Grid item container justifyContent="center">
             <Grid item>
