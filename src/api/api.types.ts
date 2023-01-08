@@ -77,6 +77,10 @@ export interface LinesDTO {
   count?: Record<string, number>;
 }
 
+export interface StopsByLineDTO {
+  stops?: IDFMStopArea[];
+}
+
 export interface IDFMLine {
   id?: string;
   name?: string;
@@ -85,4 +89,15 @@ export interface IDFMLine {
   operatorId?: number;
   lineIdColor?: string;
   lineIdBackgroundColor?: string;
+}
+
+export interface IDFMStopArea {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format double */
+  latitude?: number;
+  /** @format double */
+  longitude?: number;
+  type?: string;
 }

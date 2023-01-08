@@ -11,7 +11,7 @@ import mapboxgl from "mapbox-gl";
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
-import { IDFMLine, LinesDTO } from "api/api.types";
+import {IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO} from "api/api.types";
 import api from "api/api";
 import LoginDialog from "components/dialog";
 
@@ -31,7 +31,9 @@ const MainMapContainer = styled.div`
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [linesDTO, setLinesDTO] = useState<LinesDTO | null>(null);
+  const [stopsDTO, setStopsDTO] = useState<StopsByLineDTO | null>(null);
   const [selectedTransportMode, setSelectedTransportMode] = useState<string | null>(null);
+  const [selectedLine, setSelectedLine] = useState<string | null>(null);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -70,11 +72,38 @@ const Home: React.FC = () => {
     })();
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    (async function loadStops() {
+      if (selectedTransportMode && selectedLine) {
+        try {
+          const response = await api.idfm.getStopsByLine(selectedLine);
+          if (response && response.data && response.data.stops) {
+            setStopsDTO(response.data);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [selectedTransportMode, selectedLine]);
+
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
   const handleLogout = () => {
     dispatch(action.authentication.logoutUser());
   };
+
+  const handleChangeTransportMode = (transportMode: string) => {
+    setSelectedLine(null);
+    setSelectedTransportMode(transportMode);
+  }
+
+  const handleChangeLine = (lineId?: string) => {
+    if (lineId) {
+      setSelectedLine(lineId);
+    }
+  }
 
   return (
     <Body>
@@ -87,7 +116,7 @@ const Home: React.FC = () => {
                 <Button
                   key={key}
                   variant={key === selectedTransportMode ? "outlined" : "contained"}
-                  onClick={() => setSelectedTransportMode(key)}
+                  onClick={() => handleChangeTransportMode(key)}
                 >
                   {key} ({(linesDTO?.count && linesDTO.count[key]) || 0})
                 </Button>
@@ -97,8 +126,15 @@ const Home: React.FC = () => {
           {selectedTransportMode && (
             <div>
               {linesDTO?.lines &&
-                linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => <p key={idfmLine.id} id={idfmLine.id}>{idfmLine.name}</p>)}
+                linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => <span key={idfmLine.id} id={idfmLine.id} onClick={() => handleChangeLine(idfmLine.id)} aria-hidden="true">{idfmLine.name} </span>)}
             </div>
+          )}
+
+          {selectedTransportMode && selectedLine && (
+              <div>
+                {stopsDTO?.stops &&
+                    stopsDTO.stops.map((stop: IDFMStopArea) => <div key={stop.id}>{stop.name}</div>)}
+              </div>
           )}
           <Grid item container justifyContent="center">
             <Grid item>

@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 // ts-ignore
 import { LOCAL_STORAGE, getUsableToken } from "utils/authentication.utils";
 import endpoints from "./endpoints";
-import { FullMissionDTO, JwtDTO, LinesDTO, NextMissionsDTO, ReseauxDTO, StationsDTO } from "./api.types";
+import {FullMissionDTO, JwtDTO, LinesDTO, NextMissionsDTO, ReseauxDTO, StationsDTO, StopsByLineDTO} from "./api.types";
 
 axios.defaults.baseURL = "https://guillaumedamiens.com/api";
 // axios.defaults.baseURL = "http://localhost:8080/api";
@@ -31,6 +31,13 @@ const api = {
     getLines: (): Promise<AxiosResponse<LinesDTO>> => {
       return axs.get<LinesDTO>(endpoints.idfm.getLines);
     },
+    getStopsByLine: (lineId: string): Promise<AxiosResponse<StopsByLineDTO>> => {
+      return axs.get<StopsByLineDTO>(endpoints.idfm.getStopsByLine, {
+        params: {
+          lineId,
+        }
+      })
+    }
   },
 
   ratp: {
