@@ -1,21 +1,26 @@
 import React from "react";
 import { IDFMLine } from "api/api.types";
 import { styled } from "@mui/material";
-import { getLineBackgroundColor, getLineBorder, getLineBorderRadius, getLineColor } from "utils/line.utils";
+import { getLineBackgroundColor, getLineBorder, getLineBorderRadius, getLineColor, getLinePadding } from "utils/line.utils";
 
 const NavText = styled("div", {
   shouldForwardProp: (prop) => prop !== "line",
 })<{ line: IDFMLine }>(({ line }) => ({
   backgroundColor: getLineBackgroundColor(line),
   color: getLineColor(line),
-  minWidth: "20px",
+  minWidth: "30px",
+  minHeight: "30px",
   textAlign: "center",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   borderRadius: getLineBorderRadius(line),
   borderTop: getLineBorder(line),
   borderBottom: getLineBorder(line),
   fontWeight: "bold",
-  padding: "5px",
-  margin: "5px",
+  padding: getLinePadding(line),
+  margin: "10px",
+  cursor: "pointer",
 }));
 
 type Props = {

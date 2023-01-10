@@ -32,10 +32,12 @@ export const getLineBorderRadius = (line: IDFMLine) => {
   switch (line.transportMode) {
     case "METRO":
       return "100%";
-    case "TRAM":
+    case "RER":
+    case "TRANSILIEN":
+      return "25%";
     case "BUS":
     case "NOCTILIEN":
-    case "RER":
+    case "TRAM":
     case "TER":
     default:
       return `0px`;
@@ -53,5 +55,19 @@ export const getLineBorder = (line: IDFMLine) => {
     case "TER":
     default:
       return `0px`;
+  }
+};
+
+export const getLinePadding = (line: IDFMLine) => {
+  switch (line.transportMode) {
+    case "BUS":
+    case "NOCTILIEN":
+      return `0px 5px`;
+    case "TRAM":
+    case "METRO":
+    case "RER":
+    case "TER":
+    default:
+      return `5px`;
   }
 };
