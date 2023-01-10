@@ -102,6 +102,9 @@ const Home: React.FC = () => {
 
   const handleChangeLine = (lineId?: string) => {
     if (lineId) {
+      if (lineId === selectedLine) {
+        setSelectedLine(null);
+      }
       setStopsDTO(null);
       setSelectedLine(lineId);
     }
@@ -130,7 +133,7 @@ const Home: React.FC = () => {
               {linesDTO?.lines &&
                 linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => (
                   <Grid key={idfmLine.id} item onClick={() => handleChangeLine(idfmLine.id)}>
-                    <LineImage line={idfmLine} />
+                    <LineImage line={idfmLine} isUnselected={selectedLine != null && idfmLine.id !== selectedLine} />
                   </Grid>
                 ))}
             </Grid>

@@ -4,8 +4,8 @@ import { styled } from "@mui/material";
 import { getLineBackgroundColor, getLineBorder, getLineBorderRadius, getLineColor, getLinePadding } from "utils/line.utils";
 
 const NavText = styled("div", {
-  shouldForwardProp: (prop) => prop !== "line",
-})<{ line: IDFMLine }>(({ line }) => ({
+  shouldForwardProp: (prop) => prop !== "line" && prop !== "isUnselected",
+})<{ line: IDFMLine; isUnselected: boolean }>(({ line, isUnselected }) => ({
   backgroundColor: getLineBackgroundColor(line),
   color: getLineColor(line),
   minWidth: "30px",
@@ -21,12 +21,18 @@ const NavText = styled("div", {
   padding: getLinePadding(line),
   margin: "10px",
   cursor: "pointer",
+  opacity: isUnselected ? "50%" : "100%",
 }));
 
 type Props = {
   line: IDFMLine;
+  isUnselected: boolean;
 };
 
-const LineImage: React.FC<Props> = ({ line }: Props) => <NavText line={line}>{line.name}</NavText>;
+const LineImage: React.FC<Props> = ({ line, isUnselected }: Props) => (
+  <NavText line={line} isUnselected={isUnselected}>
+    {line.name}
+  </NavText>
+);
 
 export default LineImage;
