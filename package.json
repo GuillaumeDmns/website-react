@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "format": "prettier . --write",
+    "format": "prettier --write 'src/**'",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -51,7 +51,10 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not ie 11",
+      "not chrome < 51",
+      "not safari < 10",
+      "not android < 51"
     ],
     "development": [
       "last 1 chrome version",
