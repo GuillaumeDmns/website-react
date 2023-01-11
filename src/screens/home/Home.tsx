@@ -102,11 +102,8 @@ const Home: React.FC = () => {
 
   const handleChangeLine = (lineId?: string) => {
     if (lineId) {
-      if (lineId === selectedLine) {
-        setSelectedLine(null);
-      }
       setStopsDTO(null);
-      setSelectedLine(lineId);
+      setSelectedLine(lineId === selectedLine ? null : lineId);
     }
   };
 
