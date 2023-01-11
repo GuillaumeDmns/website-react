@@ -91,6 +91,19 @@ export interface IDFMLine {
   lineIdBackgroundColor?: string;
 }
 
+export interface IDFMStop {
+  /** @format int32 */
+  id?: number;
+  name?: string;
+  /** @format double */
+  latitude?: number;
+  /** @format double */
+  longitude?: number;
+  type?: string;
+  /** @format int32 */
+  stopAreaId?: number;
+}
+
 export interface IDFMStopArea {
   /** @format int32 */
   id?: number;
@@ -100,4 +113,22 @@ export interface IDFMStopArea {
   /** @format double */
   longitude?: number;
   type?: string;
+}
+
+export interface UnitIDFMDTO {
+  stop?: IDFMStop;
+  stopArea?: IDFMStopArea;
+  nextPassages?: CallUnit[];
+}
+
+export interface CallUnit {
+  expectedDepartureTime?: string;
+  expectedArrivalTime?: string;
+  aimedDepartureTime?: string;
+  aimedArrivalTime?: string;
+  departureStatus?: string;
+  destinationDisplay?: string;
+  arrivalPlatformName?: string;
+  arrivalStatus?: string;
+  vehicleAtStop?: boolean;
 }

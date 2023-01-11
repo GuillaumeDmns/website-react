@@ -6,6 +6,7 @@ const endpoints = {
   idfm: {
     getLines: `lines`,
     getStopsByLine: `stops-by-line`,
+    getStopNextPassage: `get-stop-next-passages`,
   },
   ratp: {
     getReseaux: `reseaux`,

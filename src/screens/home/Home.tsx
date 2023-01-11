@@ -11,7 +11,7 @@ import mapboxgl from "mapbox-gl";
 import Body from "components/body";
 import action from "store/actions";
 import { IRootState } from "store/types";
-import { IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO } from "api/api.types";
+import { CallUnit, IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO, UnitIDFMDTO } from "api/api.types";
 import api from "api/api";
 import LoginDialog from "components/dialog";
 import LineImage from "components/line/LineImage";
@@ -36,6 +36,7 @@ const Home: React.FC = () => {
   const [selectedTransportMode, setSelectedTransportMode] = useState<string | null>(null);
   const [selectedLine, setSelectedLine] = useState<string | null>(null);
   const [selectedStop, setSelectedStop] = React.useState<IDFMStopArea | null>(null);
+  const [unitIDFMDTO, setUnitIDFMDTO] = React.useState<UnitIDFMDTO | null>(null);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -90,6 +91,22 @@ const Home: React.FC = () => {
     })();
   }, [selectedTransportMode, selectedLine]);
 
+  useEffect(() => {
+    (async function loadNextPassages() {
+      if (selectedTransportMode && selectedLine && selectedStop && selectedStop.id) {
+        try {
+          const response = await api.idfm.getStopNextPassage(selectedStop.id);
+          if (response && response.data && response.data.nextPassages) {
+            setUnitIDFMDTO(response.data);
+          }
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log(e);
+        }
+      }
+    })();
+  }, [selectedTransportMode, selectedLine, selectedStop]);
+
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
   const handleLogout = () => {
@@ -140,19 +157,39 @@ const Home: React.FC = () => {
           )}
 
           {selectedTransportMode && selectedLine && (
-            <Autocomplete
-              value={selectedStop}
-              onChange={(event: React.SyntheticEvent, newSelectedStop: IDFMStopArea | null) => {
-                setSelectedStop(newSelectedStop);
-              }}
-              style={{ width: 300 }}
-              size="small"
-              options={stopsDTO?.stops || ([] as Array<IDFMStopArea>)}
-              autoHighlight
-              getOptionLabel={(stop: IDFMStopArea) => stop.name || ""}
-              // renderOption={(stop: IDFMStopArea) => stop.name || ""}
-              renderInput={(params) => <TextField {...params} label="Choisissez un arrêt" variant="outlined" />}
-            />
+            <Grid container justifyContent="center" alignItems="center">
+              <Autocomplete
+                value={selectedStop}
+                onChange={(event: React.SyntheticEvent, newSelectedStop: IDFMStopArea | null) => {
+                  setSelectedStop(newSelectedStop);
+                }}
+                style={{ width: 300 }}
+                size="small"
+                options={stopsDTO?.stops || ([] as Array<IDFMStopArea>)}
+                autoHighlight
+                getOptionLabel={(stop: IDFMStopArea) => stop.name || ""}
+                renderInput={(params) => <TextField {...params} label="Choisissez un arrêt" variant="outlined" />}
+              />
+            </Grid>
+          )}
+
+          {selectedTransportMode && selectedLine && selectedStop && unitIDFMDTO && unitIDFMDTO.nextPassages && (
+            <Grid item container direction="column" spacing={2} alignItems="center">
+              {unitIDFMDTO.nextPassages.length > 0 ? (
+                unitIDFMDTO.nextPassages.map((passage: CallUnit) => (
+                  <Grid key={`${passage.destinationDisplay}-${passage.expectedDepartureTime}-${passage.expectedArrivalTime}-`} item>
+                    Direction <b>{passage.destinationDisplay}</b> :{" "}
+                    {dayjs(
+                      passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime,
+                      "YYYYMMDDHHmm"
+                    ).fromNow()}{" "}
+                    ({dayjs(passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime).format("HH:mm")})
+                  </Grid>
+                ))
+              ) : (
+                <p>Pas de prochains départs prévus !</p>
+              )}
+            </Grid>
           )}
           <Grid item container justifyContent="center">
             <Grid item>
