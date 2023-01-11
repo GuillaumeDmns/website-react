@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
-import { ButtonGroup, Grid } from "@mui/material";
+import { Autocomplete, ButtonGroup, Grid, TextField } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
@@ -35,6 +35,7 @@ const Home: React.FC = () => {
   const [stopsDTO, setStopsDTO] = useState<StopsByLineDTO | null>(null);
   const [selectedTransportMode, setSelectedTransportMode] = useState<string | null>(null);
   const [selectedLine, setSelectedLine] = useState<string | null>(null);
+  const [selectedStop, setSelectedStop] = React.useState<IDFMStopArea | null>(null);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
@@ -96,12 +97,14 @@ const Home: React.FC = () => {
   };
 
   const handleChangeTransportMode = (transportMode: string) => {
+    setSelectedStop(null);
     setSelectedLine(null);
     setSelectedTransportMode(transportMode);
   };
 
   const handleChangeLine = (lineId?: string) => {
     if (lineId) {
+      setSelectedStop(null);
       setStopsDTO(null);
       setSelectedLine(lineId === selectedLine ? null : lineId);
     }
@@ -137,7 +140,19 @@ const Home: React.FC = () => {
           )}
 
           {selectedTransportMode && selectedLine && (
-            <div>{stopsDTO?.stops && stopsDTO.stops.map((stop: IDFMStopArea) => <div key={stop.id}>{stop.name}</div>)}</div>
+            <Autocomplete
+              value={selectedStop}
+              onChange={(event: React.SyntheticEvent, newSelectedStop: IDFMStopArea | null) => {
+                setSelectedStop(newSelectedStop);
+              }}
+              style={{ width: 300 }}
+              size="small"
+              options={stopsDTO?.stops || ([] as Array<IDFMStopArea>)}
+              autoHighlight
+              getOptionLabel={(stop: IDFMStopArea) => stop.name || ""}
+              // renderOption={(stop: IDFMStopArea) => stop.name || ""}
+              renderInput={(params) => <TextField {...params} label="Choisissez un arrêt" variant="outlined" />}
+            />
           )}
           <Grid item container justifyContent="center">
             <Grid item>
