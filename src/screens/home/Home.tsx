@@ -15,6 +15,7 @@ import { CallUnit, IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO, UnitIDFMDTO
 import api from "api/api";
 import LoginDialog from "components/dialog";
 import LineImage from "components/line/LineImage";
+import { naturalSorter } from "utils/line.utils";
 
 // @ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
@@ -95,7 +96,7 @@ const Home: React.FC = () => {
     (async function loadNextPassages() {
       if (selectedTransportMode && selectedLine && selectedStop && selectedStop.id) {
         try {
-          const response = await api.idfm.getStopNextPassage(selectedStop.id);
+          const response = await api.idfm.getStopNextPassage(selectedStop.id, selectedLine);
           if (response && response.data && response.data.nextPassages) {
             setUnitIDFMDTO(response.data);
           }
@@ -148,7 +149,7 @@ const Home: React.FC = () => {
           {selectedTransportMode && (
             <Grid container justifyContent="center" alignItems="center">
               {linesDTO?.lines &&
-                linesDTO.lines[selectedTransportMode].map((idfmLine: IDFMLine) => (
+                linesDTO.lines[selectedTransportMode].sort(naturalSorter).map((idfmLine: IDFMLine) => (
                   <Grid key={idfmLine.id} item onClick={() => handleChangeLine(idfmLine.id)}>
                     <LineImage line={idfmLine} isUnselected={selectedLine != null && idfmLine.id !== selectedLine} />
                   </Grid>

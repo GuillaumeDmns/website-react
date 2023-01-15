@@ -38,10 +38,11 @@ const api = {
         },
       });
     },
-    getStopNextPassage: (stopId: number): Promise<AxiosResponse<UnitIDFMDTO>> => {
+    getStopNextPassage: (stopId: number, lineId?: string): Promise<AxiosResponse<UnitIDFMDTO>> => {
       return axs.get<UnitIDFMDTO>(endpoints.idfm.getStopNextPassage, {
         params: {
           stopId,
+          lineId,
         },
       });
     },

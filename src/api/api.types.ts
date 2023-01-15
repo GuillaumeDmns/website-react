@@ -131,4 +131,8 @@ export interface CallUnit {
   arrivalPlatformName?: string;
   arrivalStatus?: string;
   vehicleAtStop?: boolean;
+  lineId?: string;
+  operatorId?: string;
+  directionName?: string;
+  destinationName?: string;
 }

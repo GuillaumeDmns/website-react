@@ -71,3 +71,13 @@ export const getLinePadding = (line: IDFMLine) => {
       return `5px`;
   }
 };
+
+export const naturalSorter = (line1: IDFMLine, line2: IDFMLine): number => {
+  if (line1.name && line2.name) {
+    return line1.name.localeCompare(line2.name, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    });
+  }
+  return 0;
+};
