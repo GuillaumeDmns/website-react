@@ -30,6 +30,12 @@ const MainMapContainer = styled.div`
   width: 800px;
 `;
 
+const AtStop = styled.span`
+  border: 2px solid black;
+  font-weight: bold;
+  padding: 2px;
+`;
+
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [linesDTO, setLinesDTO] = useState<LinesDTO | null>(null);
@@ -174,24 +180,48 @@ const Home: React.FC = () => {
             </Grid>
           )}
 
-          {selectedTransportMode && selectedLine && selectedStop && unitIDFMDTO && unitIDFMDTO.nextPassages && (
-            <Grid item container direction="column" spacing={2} alignItems="center">
-              {unitIDFMDTO.nextPassages.length > 0 ? (
-                unitIDFMDTO.nextPassages.map((passage: CallUnit) => (
-                  <Grid key={`${passage.destinationDisplay}-${passage.expectedDepartureTime}-${passage.expectedArrivalTime}-`} item>
-                    Direction <b>{passage.destinationDisplay}</b> :{" "}
-                    {dayjs(
-                      passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime,
-                      "YYYYMMDDHHmm"
-                    ).fromNow()}{" "}
-                    ({dayjs(passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime).format("HH:mm")})
-                  </Grid>
-                ))
-              ) : (
-                <p>Pas de prochains départs prévus !</p>
-              )}
-            </Grid>
-          )}
+          {selectedTransportMode &&
+            selectedLine &&
+            selectedStop &&
+            unitIDFMDTO &&
+            unitIDFMDTO.nextPassages &&
+            unitIDFMDTO.nextPassageDestinations && (
+              <Grid item container spacing={5} alignItems="center" justifyContent="center">
+                {unitIDFMDTO.nextPassages.length > 0 && unitIDFMDTO.nextPassageDestinations.length > 0 ? (
+                  unitIDFMDTO.nextPassageDestinations.map((direction) => (
+                    <Grid id={direction} item>
+                      <Grid container justifyContent="center" spacing={2}>
+                        <Grid item>
+                          Direction <b>{direction}</b> :
+                        </Grid>
+                        <Grid item container direction="column" spacing={2} alignItems="center">
+                          {unitIDFMDTO?.nextPassages
+                            ?.filter((passage: CallUnit) => passage.destinationDisplay === direction)
+                            .map((passage: CallUnit) => (
+                              <Grid
+                                key={`${passage.destinationDisplay}-${passage.expectedDepartureTime}-${passage.expectedArrivalTime}-`}
+                                item
+                              >
+                                {dayjs(
+                                  passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime,
+                                  "YYYYMMDDHHmm"
+                                ).fromNow()}{" "}
+                                (
+                                {dayjs(passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime).format(
+                                  "HH:mm"
+                                )}
+                                ) {passage.vehicleAtStop && <AtStop>À L&apos;ARRÊT</AtStop>}
+                              </Grid>
+                            ))}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  ))
+                ) : (
+                  <p>Pas de prochains départs prévus !</p>
+                )}
+              </Grid>
+            )}
           <Grid item container justifyContent="center">
             <Grid item>
               <Button size="medium" variant="outlined" color="primary" onClick={handleLogout}>

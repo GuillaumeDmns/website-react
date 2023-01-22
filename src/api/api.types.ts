@@ -119,6 +119,7 @@ export interface UnitIDFMDTO {
   stop?: IDFMStop;
   stopArea?: IDFMStopArea;
   nextPassages?: CallUnit[];
+  nextPassageDestinations?: Array<string>;
 }
 
 export interface CallUnit {
