@@ -36,6 +36,10 @@ const AtStop = styled.span`
   padding: 2px;
 `;
 
+const NextPassage = styled.span`
+  margin: 5px;
+`;
+
 const Home: React.FC = () => {
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
   const [linesDTO, setLinesDTO] = useState<LinesDTO | null>(null);
@@ -186,21 +190,18 @@ const Home: React.FC = () => {
             unitIDFMDTO &&
             unitIDFMDTO.nextPassages &&
             unitIDFMDTO.nextPassageDestinations && (
-              <Grid item container spacing={5} alignItems="center" justifyContent="center">
+              <Grid item container spacing={2} justifyContent="center">
                 {unitIDFMDTO.nextPassages.length > 0 && unitIDFMDTO.nextPassageDestinations.length > 0 ? (
                   unitIDFMDTO.nextPassageDestinations.map((direction) => (
-                    <Grid id={direction} item>
-                      <Grid container justifyContent="center" spacing={2}>
-                        <Grid item>
-                          Direction <b>{direction}</b> :
-                        </Grid>
-                        <Grid item container direction="column" spacing={2} alignItems="center">
+                    <Grid id={direction} xs={12} md={6} lg={4} item>
+                      <Grid container spacing={1} direction="column">
+                        <Grid item style={{ textAlign: "center" }}>Direction <b>{direction}</b> :</Grid>
+                        <Grid item container direction="column" alignItems="center">
                           {unitIDFMDTO?.nextPassages
                             ?.filter((passage: CallUnit) => passage.destinationDisplay === direction)
                             .map((passage: CallUnit) => (
-                              <Grid
+                              <NextPassage
                                 key={`${passage.destinationDisplay}-${passage.expectedDepartureTime}-${passage.expectedArrivalTime}-`}
-                                item
                               >
                                 {dayjs(
                                   passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime,
@@ -211,7 +212,7 @@ const Home: React.FC = () => {
                                   "HH:mm"
                                 )}
                                 ) {passage.vehicleAtStop && <AtStop>À L&apos;ARRÊT</AtStop>}
-                              </Grid>
+                              </NextPassage>
                             ))}
                         </Grid>
                       </Grid>
