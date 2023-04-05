@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
-import { Autocomplete, ButtonGroup, Grid, TextField } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
+import { Autocomplete, ButtonGroup, Grid, IconButton, TextField } from "@mui/material";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/fr";
@@ -46,6 +47,7 @@ const Home: React.FC = () => {
   const [stopsDTO, setStopsDTO] = useState<StopsByLineDTO | null>(null);
   const [selectedTransportMode, setSelectedTransportMode] = useState<string | null>(null);
   const [selectedLine, setSelectedLine] = useState<string | null>(null);
+  const [isSelectedLineLoading, setIsSelectedLineLoading] = useState<boolean>(false);
   const [selectedStop, setSelectedStop] = React.useState<IDFMStopArea | null>(null);
   const [unitIDFMDTO, setUnitIDFMDTO] = React.useState<UnitIDFMDTO | null>(null);
 
@@ -102,21 +104,27 @@ const Home: React.FC = () => {
     })();
   }, [selectedTransportMode, selectedLine]);
 
-  useEffect(() => {
-    (async function loadNextPassages() {
-      if (selectedTransportMode && selectedLine && selectedStop && selectedStop.id) {
-        try {
-          const response = await api.idfm.getStopNextPassage(selectedStop.id, selectedLine);
-          if (response && response.data && response.data.nextPassages) {
-            setUnitIDFMDTO(response.data);
-          }
-        } catch (e) {
-          // eslint-disable-next-line
-          console.log(e);
+  const loadNextPassages = useCallback(async () => {
+    if (selectedTransportMode && selectedLine && selectedStop && selectedStop.id) {
+      setIsSelectedLineLoading(true);
+      try {
+        const response = await api.idfm.getStopNextPassage(selectedStop.id, selectedLine);
+        if (response && response.data && response.data.nextPassages) {
+          setUnitIDFMDTO(response.data);
+          setIsSelectedLineLoading(false);
         }
+      } catch (e) {
+        // eslint-disable-next-line
+        console.log(e);
       }
-    })();
+    }
   }, [selectedTransportMode, selectedLine, selectedStop]);
+
+  useEffect(() => {
+    loadNextPassages()
+      // eslint-disable-next-line
+      .catch(console.error);
+  }, [loadNextPassages, selectedTransportMode, selectedLine, selectedStop]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
@@ -181,6 +189,15 @@ const Home: React.FC = () => {
                 getOptionLabel={(stop: IDFMStopArea) => stop.name || ""}
                 renderInput={(params) => <TextField {...params} label="Choisissez un arrêt" variant="outlined" />}
               />
+              <IconButton
+                color="primary"
+                aria-label="refresh"
+                component="label"
+                disabled={isSelectedLineLoading}
+                onClick={loadNextPassages}
+              >
+                <Refresh />
+              </IconButton>
             </Grid>
           )}
 
@@ -195,7 +212,9 @@ const Home: React.FC = () => {
                   unitIDFMDTO.nextPassageDestinations.map((direction) => (
                     <Grid id={direction} xs={12} md={6} lg={4} item>
                       <Grid container spacing={1} direction="column">
-                        <Grid item style={{ textAlign: "center" }}>Direction <b>{direction}</b> :</Grid>
+                        <Grid item style={{ textAlign: "center" }}>
+                          Direction <b>{direction}</b> :
+                        </Grid>
                         <Grid item container direction="column" alignItems="center">
                           {unitIDFMDTO?.nextPassages
                             ?.filter((passage: CallUnit) => passage.destinationDisplay === direction)
