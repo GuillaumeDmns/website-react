@@ -1,50 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Box, styled } from "@mui/material";
-import { Link } from "react-router-dom";
-import MovieCreationOutlinedIcon from "@mui/icons-material/MovieCreationOutlined";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PhotoCameraOutlinedIcon from "@mui/icons-material/PhotoCameraOutlined";
+import Link from "@mui/material/Link";
+import { Link as RouterLink } from "react-router-dom";
+import GlobalStyles from "@mui/material/GlobalStyles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Button from "@mui/material/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "store/types";
+import action from "store/actions";
+import LoginDialog from "../dialog";
 
-const Nav = styled(Link)(
-  ({ theme }) => `
-  padding: 12px ${theme.spacing(1)};
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`
-);
-
-const NavText = styled("span")(`
-  margin: 0px 8px 0px;
-`);
+const headerLinks = [
+  { name: "Home", path: "/" },
+  { name: "Photos", path: "/photos" },
+  { name: "Vidéos", path: "/videos" },
+];
 
 const Header: React.FunctionComponent = () => {
+  const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
+  const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
+  const dispatch = useDispatch();
+
+  const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
+
+  const handleLogout = () => {
+    dispatch(action.authentication.logoutUser());
+  };
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+    <>
+      <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }} />
+      <CssBaseline />
+      <AppBar position="static" elevation={1} sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}>
+        <Toolbar sx={{ flexWrap: "wrap" }}>
+          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
             Guillaume Damiens
           </Typography>
-          <Nav to="/">
-            <HomeOutlinedIcon />
-            <NavText>HOME</NavText>
-          </Nav>
-          <Nav to="/photos">
-            <PhotoCameraOutlinedIcon />
-            <NavText>PHOTOS</NavText>
-          </Nav>
-          <Nav to="/videos">
-            <MovieCreationOutlinedIcon />
-            <NavText>VIDÉOS</NavText>
-          </Nav>
+          <nav>
+            {headerLinks.map((link) => (
+              <Link
+                key={link.name}
+                variant="button"
+                color="text.primary"
+                component={RouterLink}
+                underline="none"
+                to={link.path}
+                sx={{ my: 1, mx: 1.5 }}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
+          <Button
+            href="#"
+            color="inherit"
+            variant="outlined"
+            sx={{ my: 1, mx: 1.5 }}
+            onClick={isAuthenticated ? handleLogout : handleClickOpenLoginDialog}
+          >
+            {isAuthenticated ? "SE DÉCONNECTER" : "SE CONNECTER"}
+          </Button>
         </Toolbar>
       </AppBar>
-    </Box>
+      <LoginDialog loginDialogOpen={loginDialogOpen} setLoginDialogOpen={setLoginDialogOpen} />
+    </>
   );
 };
 

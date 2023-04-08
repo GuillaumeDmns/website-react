@@ -1,21 +1,59 @@
 import React from "react";
-import { styled } from "@mui/material";
 
-import CURRENT_YEAR from "utils/date.utils";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
+import Container from "@mui/material/Container";
 
-const Container = styled("main")(
-  ({ theme }) => `
-  display: flex;
-  justify-content: flex-end;
-  box-sizing: border-box;
-  width: 100%;
-  padding: ${theme.spacing(2)} ${theme.spacing(4)};
-`
-);
+import Copyright from "./Copyright";
+
+const footers = [
+  {
+    title: "Company",
+    description: [
+      { name: "Home", link: "/" },
+      { name: "Photos", link: "/photos" },
+      { name: "Vidéos", link: "/videos" },
+    ],
+  },
+  {
+    title: "Réseaux",
+    description: [
+      { name: "Github", link: "https://github.com" },
+      { name: "Linkedin", link: "https://www.linkedin.com/in/guillaumedamiens/" },
+    ],
+  },
+];
 
 const Footer: React.FC = () => (
-  <Container>
-    <span>© {CURRENT_YEAR} Copyright: Guillaume Damiens</span>
+  <Container
+    maxWidth="md"
+    component="footer"
+    sx={{
+      borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+      mt: 8,
+      py: [3, 6],
+    }}
+  >
+    <Grid container spacing={4} justifyContent="space-evenly">
+      {footers.map((footer) => (
+        <Grid item xs={6} sm={3} key={footer.title}>
+          <Typography variant="h6" color="text.primary" gutterBottom>
+            {footer.title}
+          </Typography>
+          <ul>
+            {footer.description.map((item) => (
+              <li key={item.name}>
+                <Link href={item.link} variant="subtitle1" color="text.secondary">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Grid>
+      ))}
+    </Grid>
+    <Copyright />
   </Container>
 );
 
