@@ -9,7 +9,7 @@ import Copyright from "./Copyright";
 
 const footers = [
   {
-    title: "Company",
+    title: "Accès Rapide",
     description: [
       { name: "Home", link: "/" },
       { name: "Photos", link: "/photos" },

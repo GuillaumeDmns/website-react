@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import mapboxgl from "mapbox-gl";
+import 'mapbox-gl/dist/mapbox-gl.css';
 import { useSelector } from "react-redux";
 import { IRootState } from "store/types";
 
@@ -26,10 +27,10 @@ const OpenStreetMap: React.FC = () => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [lng, lat],
       zoom,
-    }); // eslint-disable-next-line react-hooks/exhaustive-deps
+    }); // eslint-disable-next-line
   }, [isAuthenticated]);
 
   return <MainMapContainer ref={mapContainer} className="map-container" />;
