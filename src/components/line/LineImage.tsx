@@ -8,8 +8,8 @@ const NavText = styled("div", {
 })<{ line: IDFMLine; isUnselected: boolean }>(({ line, isUnselected }) => ({
   backgroundColor: getLineBackgroundColor(line),
   color: getLineColor(line),
-  minWidth: "30px",
-  minHeight: "30px",
+  minWidth: "40px",
+  minHeight: "40px",
   textAlign: "center",
   display: "flex",
   justifyContent: "center",
