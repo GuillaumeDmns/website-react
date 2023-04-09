@@ -19,6 +19,7 @@ type Props = {
 
 const OpenStreetMap: React.FC<Props> = ({ stopsByLine }: Props) => {
   const [currentMarkers, setCurrentMarkers] = useState<Array<mapboxgl.Marker>>([]);
+  const [currentPopups, setCurrentPopups] = useState<Array<mapboxgl.Popup>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const mapContainer = useRef<any>(null);
@@ -44,16 +45,23 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine }: Props) => {
   useEffect(() => {
     if (map.current && stopsByLine) {
       const newMarkers: Array<mapboxgl.Marker> = [];
+      const newPopups: Array<mapboxgl.Popup> = [];
       stopsByLine.stops?.map((stop) => {
-        if (stop.longitude && stop.latitude) {
+        if (stop.longitude && stop.latitude && stop.name) {
           const marker = new mapboxgl.Marker().setLngLat([stop.longitude, stop.latitude]).addTo(map.current);
+          const popup = new mapboxgl.Popup().setText(stop.name);
+          marker.setPopup(popup);
           newMarkers.push(marker);
+          newPopups.push(popup);
         }
       });
       setCurrentMarkers(newMarkers);
+      setCurrentPopups(newPopups);
     } else {
       currentMarkers.map((marker) => marker.remove());
+      currentPopups.map((popup) => popup.remove());
       setCurrentMarkers([]);
+      setCurrentPopups([]);
     }
   }, [stopsByLine]);
 
