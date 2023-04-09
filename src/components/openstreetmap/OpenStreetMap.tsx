@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import mapboxgl from "mapbox-gl";
-import 'mapbox-gl/dist/mapbox-gl.css';
 import { useSelector } from "react-redux";
 import { IRootState } from "store/types";
+import { StopsByLineDTO } from "api/api.types";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 const MainMapContainer = styled.div`
   height: 500px;
@@ -12,7 +13,12 @@ const MainMapContainer = styled.div`
 
 mapboxgl.accessToken = "pk.eyJ1IjoiZ3VpbGxhdW1lZG1ucyIsImEiOiJja3Y5ejdtYjMwYTJuMzFwZ292eTZtbHE5In0.d3ZU8GezLxJHmfZsfYgqbw";
 
-const OpenStreetMap: React.FC = () => {
+type Props = {
+  stopsByLine: StopsByLineDTO | null;
+};
+
+const OpenStreetMap: React.FC<Props> = ({ stopsByLine }: Props) => {
+  const [currentMarkers, setCurrentMarkers] = useState<Array<mapboxgl.Marker>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const mapContainer = useRef<any>(null);
@@ -32,6 +38,24 @@ const OpenStreetMap: React.FC = () => {
       zoom,
     }); // eslint-disable-next-line
   }, [isAuthenticated]);
+
+  new mapboxgl.Marker();
+
+  useEffect(() => {
+    if (map.current && stopsByLine) {
+      const newMarkers: Array<mapboxgl.Marker> = [];
+      stopsByLine.stops?.map((stop) => {
+        if (stop.longitude && stop.latitude) {
+          const marker = new mapboxgl.Marker().setLngLat([stop.longitude, stop.latitude]).addTo(map.current);
+          newMarkers.push(marker);
+        }
+      });
+      setCurrentMarkers(newMarkers);
+    } else {
+      currentMarkers.map((marker) => marker.remove());
+      setCurrentMarkers([]);
+    }
+  }, [stopsByLine]);
 
   return <MainMapContainer ref={mapContainer} className="map-container" />;
 };

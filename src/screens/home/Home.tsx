@@ -67,7 +67,7 @@ const Home: React.FC = () => {
           />
           <Grid item container justifyContent="center">
             <Grid item>
-              <OpenStreetMap />
+              <OpenStreetMap stopsByLine={stopsDTO} />
             </Grid>
           </Grid>
         </Grid>
