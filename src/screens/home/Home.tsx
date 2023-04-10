@@ -68,7 +68,7 @@ const Home: React.FC = () => {
           />
           <Grid item container justifyContent="center">
             <Grid item>
-              <OpenStreetMap stopsByLine={stopsDTO} selectedLineColor={selectedLineColor} />
+              <OpenStreetMap stopsByLine={stopsDTO} selectedLineColor={selectedLineColor} setSelectedStop={setSelectedStop} />
             </Grid>
           </Grid>
         </Grid>
