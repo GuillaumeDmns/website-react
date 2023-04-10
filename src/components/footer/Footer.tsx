@@ -19,7 +19,7 @@ const footers = [
   {
     title: "Réseaux",
     description: [
-      { name: "Github", link: "https://github.com" },
+      { name: "Github", link: "https://github.com/GuillaumeDmns" },
       { name: "Linkedin", link: "https://www.linkedin.com/in/guillaumedamiens/" },
     ],
   },

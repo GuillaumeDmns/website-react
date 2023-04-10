@@ -15,9 +15,10 @@ mapboxgl.accessToken = "pk.eyJ1IjoiZ3VpbGxhdW1lZG1ucyIsImEiOiJja3Y5ejdtYjMwYTJuM
 
 type Props = {
   stopsByLine: StopsByLineDTO | null;
+  selectedLineColor: string | undefined;
 };
 
-const OpenStreetMap: React.FC<Props> = ({ stopsByLine }: Props) => {
+const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedLineColor }: Props) => {
   const [currentMarkers, setCurrentMarkers] = useState<Array<mapboxgl.Marker>>([]);
   const [currentPopups, setCurrentPopups] = useState<Array<mapboxgl.Popup>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
@@ -28,6 +29,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine }: Props) => {
   const [lng] = useState(2.349014);
   const [lat] = useState(48.864716);
   const [zoom] = useState(11);
+  const markersColor: string | undefined = selectedLineColor ? `#${selectedLineColor}` : undefined;
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -48,7 +50,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine }: Props) => {
       const newPopups: Array<mapboxgl.Popup> = [];
       stopsByLine.stops?.map((stop) => {
         if (stop.longitude && stop.latitude && stop.name) {
-          const marker = new mapboxgl.Marker().setLngLat([stop.longitude, stop.latitude]).addTo(map.current);
+          const marker = new mapboxgl.Marker({ color: markersColor}).setLngLat([stop.longitude, stop.latitude]).addTo(map.current);
           const popup = new mapboxgl.Popup().setText(stop.name);
           marker.setPopup(popup);
           newMarkers.push(marker);
