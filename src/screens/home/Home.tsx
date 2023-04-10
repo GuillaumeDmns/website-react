@@ -28,7 +28,12 @@ const Home: React.FC = () => {
   const [unitIDFMDTO, setUnitIDFMDTO] = React.useState<UnitIDFMDTO | null>(null);
 
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
-  const selectedLineColor: string | undefined = selectedTransportMode && linesDTO && linesDTO.lines && linesDTO.lines[selectedTransportMode].find(line => line.id === selectedLine)?.lineIdBackgroundColor || undefined;
+  const selectedLineColor: string | undefined =
+    (selectedTransportMode &&
+      linesDTO &&
+      linesDTO.lines &&
+      linesDTO.lines[selectedTransportMode].find((line) => line.id === selectedLine)?.lineIdBackgroundColor) ||
+    undefined;
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
@@ -68,7 +73,12 @@ const Home: React.FC = () => {
           />
           <Grid item container justifyContent="center">
             <Grid item>
-              <OpenStreetMap stopsByLine={stopsDTO} selectedLineColor={selectedLineColor} setSelectedStop={setSelectedStop} />
+              <OpenStreetMap
+                stopsByLine={stopsDTO}
+                selectedStop={selectedStop}
+                selectedLineColor={selectedLineColor}
+                setSelectedStop={setSelectedStop}
+              />
             </Grid>
           </Grid>
         </Grid>

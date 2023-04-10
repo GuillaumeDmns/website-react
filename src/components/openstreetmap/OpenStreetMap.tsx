@@ -15,11 +15,12 @@ mapboxgl.accessToken = "pk.eyJ1IjoiZ3VpbGxhdW1lZG1ucyIsImEiOiJja3Y5ejdtYjMwYTJuM
 
 type Props = {
   stopsByLine: StopsByLineDTO | null;
+  selectedStop: IDFMStopArea | null;
   selectedLineColor: string | undefined;
   setSelectedStop: React.Dispatch<React.SetStateAction<IDFMStopArea | null>>;
 };
 
-const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedLineColor, setSelectedStop }: Props) => {
+const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLineColor, setSelectedStop }: Props) => {
   const [currentMarkers, setCurrentMarkers] = useState<Array<mapboxgl.Marker>>([]);
   const [currentPopups, setCurrentPopups] = useState<Array<mapboxgl.Popup>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
@@ -43,6 +44,24 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedLineColor, setSel
     }); // eslint-disable-next-line
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (!isAuthenticated || !selectedStop) return;
+    if (map.current) {
+      map.current.flyTo({
+        center: [selectedStop.longitude || 0, selectedStop.latitude || 0],
+      });
+    } // eslint-disable-next-line
+  }, [isAuthenticated, selectedStop]);
+
+  useEffect(() => {
+    if (!isAuthenticated || !selectedStop) return;
+    if (map.current) {
+      map.current.flyTo({
+        center: [selectedStop.longitude || 0, selectedStop.latitude || 0],
+      });
+    } // eslint-disable-next-line
+  }, [isAuthenticated, selectedStop]);
+
   new mapboxgl.Marker();
 
   useEffect(() => {
@@ -51,16 +70,40 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedLineColor, setSel
       const newPopups: Array<mapboxgl.Popup> = [];
       stopsByLine.stops?.map((stop) => {
         if (stop.longitude && stop.latitude && stop.name) {
-          const marker = new mapboxgl.Marker({ color: markersColor, scale: 0.8 }).setLngLat([stop.longitude, stop.latitude]).addTo(map.current);
+          const marker = new mapboxgl.Marker({ color: markersColor, scale: 0.8 })
+            .setLngLat([stop.longitude, stop.latitude])
+            .addTo(map.current);
           const popup = new mapboxgl.Popup().setText(stop.name);
           marker.setPopup(popup);
-          marker.getElement().addEventListener('click', () => setSelectedStop(stop))
+          marker.getElement().addEventListener("click", () => setSelectedStop(stop));
           newMarkers.push(marker);
           newPopups.push(popup);
         }
       });
       setCurrentMarkers(newMarkers);
       setCurrentPopups(newPopups);
+
+      const minLat =
+        stopsByLine.stops?.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude < prev.latitude ? curr : prev))
+          .latitude || 0;
+      const maxLat =
+        stopsByLine.stops?.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude > prev.latitude ? curr : prev))
+          .latitude || 0;
+      const minLong =
+        stopsByLine.stops?.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude < prev.longitude ? curr : prev))
+          .longitude || 0;
+      const maxLong =
+        stopsByLine.stops?.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude > prev.longitude ? curr : prev))
+          .longitude || 0;
+      map.current.fitBounds(
+        [
+          [minLong, minLat],
+          [maxLong, maxLat],
+        ],
+        {
+          padding: 40,
+        }
+      );
     } else {
       currentMarkers.map((marker) => marker.remove());
       currentPopups.map((popup) => popup.remove());
