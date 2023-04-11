@@ -83,27 +83,29 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
       setCurrentMarkers(newMarkers);
       setCurrentPopups(newPopups);
 
-      const minLat =
-        stopsByLine.stops?.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude < prev.latitude ? curr : prev))
-          .latitude || 0;
-      const maxLat =
-        stopsByLine.stops?.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude > prev.latitude ? curr : prev))
-          .latitude || 0;
-      const minLong =
-        stopsByLine.stops?.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude < prev.longitude ? curr : prev))
-          .longitude || 0;
-      const maxLong =
-        stopsByLine.stops?.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude > prev.longitude ? curr : prev))
-          .longitude || 0;
-      map.current.fitBounds(
-        [
-          [minLong, minLat],
-          [maxLong, maxLat],
-        ],
-        {
-          padding: 40,
-        }
-      );
+      if (stopsByLine.stops && stopsByLine.stops.length > 0) {
+        const minLat =
+          stopsByLine.stops.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude < prev.latitude ? curr : prev))
+            .latitude || 0;
+        const maxLat =
+          stopsByLine.stops.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude > prev.latitude ? curr : prev))
+            .latitude || 0;
+        const minLong =
+          stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude < prev.longitude ? curr : prev))
+            .longitude || 0;
+        const maxLong =
+          stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude > prev.longitude ? curr : prev))
+            .longitude || 0;
+        map.current.fitBounds(
+          [
+            [minLong, minLat],
+            [maxLong, maxLat],
+          ],
+          {
+            padding: 40,
+          }
+        );
+      }
     } else {
       currentMarkers.map((marker) => marker.remove());
       currentPopups.map((popup) => popup.remove());
