@@ -26,7 +26,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const mapContainer = useRef<any>(null);
-  const map = useRef<any>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
 
   const [lng] = useState(2.349014);
   const [lat] = useState(48.864716);
@@ -46,7 +46,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
 
   useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
-    if (map.current) {
+    if (map.current instanceof mapboxgl.Map) {
       map.current.flyTo({
         center: [selectedStop.longitude || 0, selectedStop.latitude || 0],
       });
@@ -55,7 +55,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
 
   useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
-    if (map.current) {
+    if (map.current instanceof mapboxgl.Map) {
       map.current.flyTo({
         center: [selectedStop.longitude || 0, selectedStop.latitude || 0],
       });
@@ -65,11 +65,11 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
   new mapboxgl.Marker();
 
   useEffect(() => {
-    if (map.current && stopsByLine) {
+    if (map.current instanceof mapboxgl.Map && stopsByLine) {
       const newMarkers: Array<mapboxgl.Marker> = [];
       const newPopups: Array<mapboxgl.Popup> = [];
       stopsByLine.stops?.map((stop) => {
-        if (stop.longitude && stop.latitude && stop.name) {
+        if (stop.longitude && stop.latitude && stop.name && map.current instanceof mapboxgl.Map) {
           const marker = new mapboxgl.Marker({ color: markersColor, scale: 0.8 })
             .setLngLat([stop.longitude, stop.latitude])
             .addTo(map.current);
@@ -106,6 +106,9 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
           }
         );
       }
+
+      map.current.addLayer({})
+
     } else {
       currentMarkers.map((marker) => marker.remove());
       currentPopups.map((popup) => popup.remove());
