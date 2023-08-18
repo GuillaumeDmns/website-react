@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import mapboxgl from "mapbox-gl";
 import { useSelector } from "react-redux";
+import L, { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import { IRootState } from "store/types";
 import { IDFMStopArea, StopsByLineDTO } from "api/api.types";
+import "leaflet/dist/leaflet.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const MainMapContainer = styled.div`
@@ -20,6 +22,10 @@ type Props = {
   setSelectedStop: React.Dispatch<React.SetStateAction<IDFMStopArea | null>>;
 };
 
+const Markers = () => {
+  return <></>;
+}
+
 const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLineColor, setSelectedStop }: Props) => {
   const [currentMarkers, setCurrentMarkers] = useState<Array<mapboxgl.Marker>>([]);
   const [currentPopups, setCurrentPopups] = useState<Array<mapboxgl.Popup>>([]);
@@ -33,16 +39,16 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
   const [zoom] = useState(11);
   const markersColor: string | undefined = selectedLineColor ? `#${selectedLineColor}` : undefined;
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: [lng, lat],
-      zoom,
-    }); // eslint-disable-next-line
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) return;
+  //   if (map.current) return; // initialize map only once
+  //   map.current = new mapboxgl.Map({
+  //     container: mapContainer.current,
+  //     style: "mapbox://styles/mapbox/streets-v12",
+  //     center: [lng, lat],
+  //     zoom,
+  //   }); // eslint-disable-next-line
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
@@ -62,7 +68,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
     } // eslint-disable-next-line
   }, [isAuthenticated, selectedStop]);
 
-  new mapboxgl.Marker();
+  // new mapboxgl.Marker();
 
   useEffect(() => {
     if (map.current instanceof mapboxgl.Map && stopsByLine) {
@@ -107,7 +113,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
         );
       }
 
-      map.current.addLayer({})
+      // map.current.addLayer({})
 
     } else {
       currentMarkers.map((marker) => marker.remove());
@@ -117,7 +123,25 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
     }
   }, [stopsByLine]);
 
-  return <MainMapContainer ref={mapContainer} className="map-container" />;
+  return <>
+    {/*<MainMapContainer ref={mapContainer} className="map-container" />*/}
+    <div id="map"  style={{ width: '800px' }}>
+
+      <MapContainer
+          ref={mapContainer}
+          center={[lat, lng]}
+          zoom={zoom}
+          scrollWheelZoom={false}
+          style={{ height: '500px' }}
+      >
+        <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Markers />
+      </MapContainer>
+    </div>
+    </>;
 };
 
 export default OpenStreetMap;
