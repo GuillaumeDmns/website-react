@@ -9,7 +9,7 @@ import Body from "components/body";
 import { IRootState } from "store/types";
 import { IDFMStopArea, LinesDTO, StopsByLineDTO, UnitIDFMDTO } from "api/api.types";
 import LoginDialog from "components/dialog";
-import OpenStreetMap from "components/openstreetmap";
+import OpenStreetMapContainer from "components/openstreetmap/OpenStreetMapContainer";
 import TransportModesList from "components/idfm/TransportModesList";
 import LinesList from "components/idfm/LinesList";
 import StopsList from "components/idfm/StopsList";
@@ -73,7 +73,7 @@ const Home: React.FC = () => {
           />
           <Grid item container justifyContent="center">
             <Grid item>
-              <OpenStreetMap
+              <OpenStreetMapContainer
                 stopsByLine={stopsDTO}
                 selectedStop={selectedStop}
                 selectedLineColor={selectedLineColor}

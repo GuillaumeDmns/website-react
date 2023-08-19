@@ -26,7 +26,7 @@ const Timetable: React.FC<Props> = ({ selectedTransportMode, selectedLine, selec
     <Grid item container spacing={2} justifyContent="center">
       {unitIDFM.nextPassages.length > 0 && unitIDFM.nextPassageDestinations.length > 0 ? (
         unitIDFM.nextPassageDestinations.map((direction) => (
-          <Grid id={direction} xs={12} md={6} lg={4} item>
+          <Grid key={direction} id={direction} xs={12} md={6} lg={4} item>
             <Grid container spacing={1} direction="column">
               <Grid item style={{ textAlign: "center" }}>
                 Direction <b>{direction}</b> :

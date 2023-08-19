@@ -1,17 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import mapboxgl from "mapbox-gl";
+import React, { useEffect, useState } from "react";
+import L from "leaflet";
 import { useSelector } from "react-redux";
+import { Marker, Popup, useMap } from "react-leaflet";
+
 import { IRootState } from "store/types";
 import { IDFMStopArea, StopsByLineDTO } from "api/api.types";
+import icon from "leaflet/dist/images/marker-icon.png";
+import "leaflet/dist/leaflet.css";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const MainMapContainer = styled.div`
-  height: 500px;
-  width: 800px;
-`;
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  iconSize: [20, 32.8],
+  iconAnchor: [10, 32.8],
+});
 
-mapboxgl.accessToken = "pk.eyJ1IjoiZ3VpbGxhdW1lZG1ucyIsImEiOiJja3Y5ejdtYjMwYTJuMzFwZ292eTZtbHE5In0.d3ZU8GezLxJHmfZsfYgqbw";
+L.Marker.prototype.options.icon = DefaultIcon;
 
 type Props = {
   stopsByLine: StopsByLineDTO | null;
@@ -20,68 +24,36 @@ type Props = {
   setSelectedStop: React.Dispatch<React.SetStateAction<IDFMStopArea | null>>;
 };
 
+type MarkersAndPopus = {
+  lat: number;
+  lng: number;
+  stopName: string;
+};
+
 const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLineColor, setSelectedStop }: Props) => {
-  const [currentMarkers, setCurrentMarkers] = useState<Array<mapboxgl.Marker>>([]);
-  const [currentPopups, setCurrentPopups] = useState<Array<mapboxgl.Popup>>([]);
+  const [currentMarkers, setCurrentMarkers] = useState<Array<MarkersAndPopus>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
-  const mapContainer = useRef<any>(null);
-  const map = useRef<any>(null);
+  const map = useMap();
 
-  const [lng] = useState(2.349014);
-  const [lat] = useState(48.864716);
-  const [zoom] = useState(11);
   const markersColor: string | undefined = selectedLineColor ? `#${selectedLineColor}` : undefined;
 
   useEffect(() => {
-    if (!isAuthenticated) return;
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: [lng, lat],
-      zoom,
-    }); // eslint-disable-next-line
-  }, [isAuthenticated]);
-
-  useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
-    if (map.current) {
-      map.current.flyTo({
-        center: [selectedStop.longitude || 0, selectedStop.latitude || 0],
-      });
-    } // eslint-disable-next-line
+    map.flyTo([selectedStop.latitude || 0, selectedStop.longitude || 0]);
   }, [isAuthenticated, selectedStop]);
 
   useEffect(() => {
-    if (!isAuthenticated || !selectedStop) return;
-    if (map.current) {
-      map.current.flyTo({
-        center: [selectedStop.longitude || 0, selectedStop.latitude || 0],
-      });
-    } // eslint-disable-next-line
-  }, [isAuthenticated, selectedStop]);
-
-  new mapboxgl.Marker();
-
-  useEffect(() => {
-    if (map.current && stopsByLine) {
-      const newMarkers: Array<mapboxgl.Marker> = [];
-      const newPopups: Array<mapboxgl.Popup> = [];
+    if (stopsByLine) {
+      const newMarkersAndPopus: Array<MarkersAndPopus> = [];
       stopsByLine.stops?.map((stop) => {
         if (stop.longitude && stop.latitude && stop.name) {
-          const marker = new mapboxgl.Marker({ color: markersColor, scale: 0.8 })
-            .setLngLat([stop.longitude, stop.latitude])
-            .addTo(map.current);
-          const popup = new mapboxgl.Popup().setText(stop.name);
-          marker.setPopup(popup);
-          marker.getElement().addEventListener("click", () => setSelectedStop(stop));
-          newMarkers.push(marker);
-          newPopups.push(popup);
+          const markerAndPopup: MarkersAndPopus = { lat: stop.latitude, lng: stop.longitude, stopName: stop.name };
+          // marker.getElement().addEventListener("click", () => setSelectedStop(stop));
+          newMarkersAndPopus.push(markerAndPopup);
         }
       });
-      setCurrentMarkers(newMarkers);
-      setCurrentPopups(newPopups);
+      setCurrentMarkers(newMarkersAndPopus);
 
       if (stopsByLine.stops && stopsByLine.stops.length > 0) {
         const minLat =
@@ -96,25 +68,40 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
         const maxLong =
           stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude > prev.longitude ? curr : prev))
             .longitude || 0;
-        map.current.fitBounds(
+        map.fitBounds(
           [
-            [minLong, minLat],
-            [maxLong, maxLat],
+            [minLat, minLong],
+            [maxLat, maxLong],
           ],
           {
-            padding: 40,
+            padding: [40, 40],
           }
         );
       }
+
+      // map.current.addLayer({})
     } else {
-      currentMarkers.map((marker) => marker.remove());
-      currentPopups.map((popup) => popup.remove());
       setCurrentMarkers([]);
-      setCurrentPopups([]);
     }
   }, [stopsByLine]);
 
-  return <MainMapContainer ref={mapContainer} className="map-container" />;
+  return (
+    <>
+      {currentMarkers.map((marker, id) => (
+        <Marker
+          key={id}
+          position={[marker.lat, marker.lng]}
+          eventHandlers={{
+            click: () => {
+              setSelectedStop(stopsByLine?.stops?.find((stop) => stop.latitude === marker.lat && stop.longitude === marker.lng) || null);
+            },
+          }}
+        >
+          <Popup>{marker.stopName}</Popup>
+        </Marker>
+      ))}
+    </>
+  );
 };
 
 export default OpenStreetMap;
