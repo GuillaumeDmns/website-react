@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import L from "leaflet";
 import { useSelector } from "react-redux";
-import { Marker, Popup, useMap } from "react-leaflet";
+import { GeoJSON, Marker, Popup, useMap } from "react-leaflet";
 
 import { IRootState } from "store/types";
-import { IDFMStopArea, StopsByLineDTO } from "api/api.types";
+import { IDFMStopArea, LineDTO, StopsByLineDTO } from "api/api.types";
 import icon from "leaflet/dist/images/marker-icon.png";
 import "leaflet/dist/leaflet.css";
-import "mapbox-gl/dist/mapbox-gl.css";
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -20,7 +19,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 type Props = {
   stopsByLine: StopsByLineDTO | null;
   selectedStop: IDFMStopArea | null;
-  selectedLineColor: string | undefined;
+  selectedLine: LineDTO | undefined;
   setSelectedStop: React.Dispatch<React.SetStateAction<IDFMStopArea | null>>;
 };
 
@@ -30,13 +29,13 @@ type MarkersAndPopus = {
   stopName: string;
 };
 
-const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLineColor, setSelectedStop }: Props) => {
+const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLine, setSelectedStop }: Props) => {
   const [currentMarkers, setCurrentMarkers] = useState<Array<MarkersAndPopus>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
 
   const map = useMap();
 
-  const markersColor: string | undefined = selectedLineColor ? `#${selectedLineColor}` : undefined;
+  const lineColor: string | undefined = selectedLine && selectedLine.lineIdBackgroundColor ? `#${selectedLine.lineIdBackgroundColor}` : undefined;
 
   useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
@@ -85,6 +84,10 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
     }
   }, [stopsByLine]);
 
+  const geoJsonStyle = {
+    color: lineColor
+  };
+
   return (
     <>
       {currentMarkers.map((marker, id) => (
@@ -100,6 +103,9 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
           <Popup>{marker.stopName}</Popup>
         </Marker>
       ))}
+      {selectedLine && selectedLine.shape &&
+        <GeoJSON key={selectedLine.id} data={JSON.parse(selectedLine.shape)} style={geoJsonStyle} />
+      }
     </>
   );
 };
