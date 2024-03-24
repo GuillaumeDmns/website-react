@@ -1,6 +1,6 @@
-import { IDFMLine } from "api/api.types";
+import { LineDTO } from "api/api.types";
 
-export const getLineBackgroundColor = (line: IDFMLine) => {
+export const getLineBackgroundColor = (line: LineDTO) => {
   switch (line.transportMode) {
     case "TRAM":
       return "white";
@@ -14,7 +14,7 @@ export const getLineBackgroundColor = (line: IDFMLine) => {
   }
 };
 
-export const getLineColor = (line: IDFMLine) => {
+export const getLineColor = (line: LineDTO) => {
   switch (line.transportMode) {
     case "TRAM":
       return "black";
@@ -28,7 +28,7 @@ export const getLineColor = (line: IDFMLine) => {
   }
 };
 
-export const getLineBorderRadius = (line: IDFMLine) => {
+export const getLineBorderRadius = (line: LineDTO) => {
   switch (line.transportMode) {
     case "METRO":
       return "100%";
@@ -44,7 +44,7 @@ export const getLineBorderRadius = (line: IDFMLine) => {
   }
 };
 
-export const getLineBorder = (line: IDFMLine) => {
+export const getLineBorder = (line: LineDTO) => {
   switch (line.transportMode) {
     case "TRAM":
       return `5px solid #${line.lineIdBackgroundColor}`;
@@ -58,7 +58,7 @@ export const getLineBorder = (line: IDFMLine) => {
   }
 };
 
-export const getLinePadding = (line: IDFMLine) => {
+export const getLinePadding = (line: LineDTO) => {
   switch (line.transportMode) {
     case "BUS":
     case "NOCTILIEN":
@@ -72,7 +72,7 @@ export const getLinePadding = (line: IDFMLine) => {
   }
 };
 
-export const naturalSorter = (line1: IDFMLine, line2: IDFMLine): number => {
+export const naturalSorter = (line1: LineDTO, line2: LineDTO): number => {
   if (line1.name && line2.name) {
     return line1.name.localeCompare(line2.name, undefined, {
       numeric: true,

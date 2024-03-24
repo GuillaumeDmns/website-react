@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Grid } from "@mui/material";
 
-import { IDFMLine, IDFMStopArea, LinesDTO, StopsByLineDTO } from "api/api.types";
+import { IDFMStopArea, LineDTO, LinesDTO, StopsByLineDTO } from "api/api.types";
 import { naturalSorter } from "utils/line.utils";
 import api from "api/api";
 import LineImage from "../line";
@@ -43,9 +43,9 @@ const LinesList: React.FC<Props> = ({ lines, setStops, selectedLine, selectedTra
   return selectedTransportMode ? (
     <Grid container justifyContent="center" alignItems="center">
       {lines?.lines &&
-        lines.lines[selectedTransportMode].sort(naturalSorter).map((idfmLine: IDFMLine) => (
-          <Grid key={idfmLine.id} item onClick={() => handleChangeLine(idfmLine.id)}>
-            <LineImage line={idfmLine} isUnselected={selectedLine != null && idfmLine.id !== selectedLine} />
+        lines.lines[selectedTransportMode].sort(naturalSorter).map((lineDTO: LineDTO) => (
+          <Grid key={lineDTO.id} item onClick={() => handleChangeLine(lineDTO.id)}>
+            <LineImage line={lineDTO} isUnselected={selectedLine != null && lineDTO.id !== selectedLine} />
           </Grid>
         ))}
     </Grid>

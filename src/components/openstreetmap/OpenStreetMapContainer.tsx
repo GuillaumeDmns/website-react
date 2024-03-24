@@ -2,12 +2,12 @@ import React, { useRef, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 
 import OpenStreetMap from "./OpenStreetMap";
-import { IDFMStopArea, StopsByLineDTO } from "api/api.types";
+import { IDFMStopArea, LineDTO, StopsByLineDTO } from "api/api.types";
 
 type Props = {
   stopsByLine: StopsByLineDTO | null;
   selectedStop: IDFMStopArea | null;
-  selectedLineColor: string | undefined;
+  selectedLine: LineDTO | undefined;
   setSelectedStop: React.Dispatch<React.SetStateAction<IDFMStopArea | null>>;
 };
 
@@ -22,8 +22,8 @@ const OpenStreetMapContainer: React.FC<Props> = (props: Props) => {
     <div id="map" style={{ width: "800px" }}>
       <MapContainer ref={mapContainer} center={[lat, lng]} zoom={zoom} scrollWheelZoom={false} style={{ height: "500px" }}>
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
         />
         <OpenStreetMap {...props}></OpenStreetMap>
       </MapContainer>

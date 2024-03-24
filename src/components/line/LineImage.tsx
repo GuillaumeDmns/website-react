@@ -1,11 +1,11 @@
 import React from "react";
-import { IDFMLine } from "api/api.types";
+import { LineDTO } from "api/api.types";
 import { styled } from "@mui/material";
 import { getLineBackgroundColor, getLineBorder, getLineBorderRadius, getLineColor, getLinePadding } from "utils/line.utils";
 
 const NavText = styled("div", {
   shouldForwardProp: (prop) => prop !== "line" && prop !== "isUnselected",
-})<{ line: IDFMLine; isUnselected: boolean }>(({ line, isUnselected }) => ({
+})<{ line: LineDTO; isUnselected: boolean }>(({ line, isUnselected }) => ({
   backgroundColor: getLineBackgroundColor(line),
   color: getLineColor(line),
   minWidth: "40px",
@@ -25,7 +25,7 @@ const NavText = styled("div", {
 }));
 
 type Props = {
-  line: IDFMLine;
+  line: LineDTO;
   isUnselected: boolean;
 };
 

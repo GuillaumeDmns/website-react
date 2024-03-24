@@ -73,7 +73,7 @@ export interface StationsDTO {
 }
 
 export interface LinesDTO {
-  lines?: Record<string, IDFMLine[]>;
+  lines?: Record<string, LineDTO[]>;
   count?: Record<string, number>;
 }
 
@@ -81,7 +81,7 @@ export interface StopsByLineDTO {
   stops?: IDFMStopArea[];
 }
 
-export interface IDFMLine {
+export interface LineDTO {
   id?: string;
   name?: string;
   transportMode?: "BUS" | "NOCTILIEN" | "METRO" | "TRAM" | "TER" | "TRANSILIEN" | "RER";
@@ -89,6 +89,7 @@ export interface IDFMLine {
   operatorId?: number;
   lineIdColor?: string;
   lineIdBackgroundColor?: string;
+  shape?: string;
 }
 
 export interface IDFMStop {

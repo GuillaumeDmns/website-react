@@ -1,4 +1,4 @@
-import jwtDecode, { JwtPayload } from "jwt-decode";
+import { JwtPayload, jwtDecode } from "jwt-decode";
 import api from "api/api";
 
 export enum LOCAL_STORAGE {
