@@ -22,8 +22,8 @@ const OpenStreetMapContainer: React.FC<Props> = (props: Props) => {
     <div id="map" style={{ width: "800px" }}>
       <MapContainer ref={mapContainer} center={[lat, lng]} zoom={zoom} scrollWheelZoom={false} style={{ height: "500px" }}>
         <TileLayer
-          attribution='Images aériennes @ IGN'
-          url="https://wxs.ign.fr/essentiels/geoportail/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fjpeg&TileMatrix={z}&TileCol={x}&TileRow={y}"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
         />
         <OpenStreetMap {...props}></OpenStreetMap>
       </MapContainer>

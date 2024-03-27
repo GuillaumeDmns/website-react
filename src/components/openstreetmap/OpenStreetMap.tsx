@@ -88,10 +88,30 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
     color: lineColor
   };
 
+  const iconsStyle = `
+  background-color: ${lineColor};
+  width: 1rem;
+  height: 1rem;
+  display: block;
+  left: -1.5rem;
+  top: -1.5rem;
+  position: relative;
+  border-radius: 3rem 3rem 0;
+  transform: rotate(45deg);
+  border: 1px solid #FFFFFF`
+
+  const markerIcon = L.divIcon({
+    className: "custom-pin",
+    iconAnchor: [-14, -6],
+    popupAnchor: [-2, 0],
+    html: `<span style="${iconsStyle}" />`
+  });
+
   return (
     <>
       {currentMarkers.map((marker, id) => (
         <Marker
+          icon={markerIcon}
           key={id}
           position={[marker.lat, marker.lng]}
           eventHandlers={{
