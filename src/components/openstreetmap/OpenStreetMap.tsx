@@ -123,8 +123,8 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
           <Popup>{marker.stopName}</Popup>
         </Marker>
       ))}
-      {selectedLine && selectedLine.shape &&
-        <GeoJSON key={selectedLine.id} data={JSON.parse(selectedLine.shape)} style={geoJsonStyle} />
+      {selectedLine && stopsByLine && stopsByLine.shape &&
+        <GeoJSON key={selectedLine.id} data={JSON.parse(stopsByLine.shape)} style={geoJsonStyle} />
       }
     </>
   );

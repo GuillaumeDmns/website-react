@@ -79,6 +79,7 @@ export interface LinesDTO {
 
 export interface StopsByLineDTO {
   stops?: IDFMStopArea[];
+  shape?: string;
 }
 
 export interface LineDTO {
@@ -89,7 +90,6 @@ export interface LineDTO {
   operatorId?: number;
   lineIdColor?: string;
   lineIdBackgroundColor?: string;
-  shape?: string;
 }
 
 export interface IDFMStop {
