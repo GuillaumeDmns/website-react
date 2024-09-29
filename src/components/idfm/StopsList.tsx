@@ -27,8 +27,6 @@ const StopsList: React.FC<Props> = ({ stops, selectedStop, selectedLine, selecte
           setIsSelectedLineLoading(false);
         }
       } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
       }
     }
   }, [selectedTransportMode, selectedLine, selectedStop, setUnitIDFM]);
@@ -43,7 +41,7 @@ const StopsList: React.FC<Props> = ({ stops, selectedStop, selectedLine, selecte
     <Grid container justifyContent="center" alignItems="center">
       <Autocomplete
         value={selectedStop}
-        onChange={(event: React.SyntheticEvent, newSelectedStop: IDFMStopArea | null) => {
+        onChange={(_event: React.SyntheticEvent, newSelectedStop: IDFMStopArea | null) => {
           setSelectedStop(newSelectedStop);
         }}
         style={{ width: 300 }}
