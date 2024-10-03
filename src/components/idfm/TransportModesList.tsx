@@ -49,9 +49,8 @@ const TransportModesList: React.FC<Props> = ({
 
   return lines?.lines ? (
     <ButtonGroup size="large" aria-label="large button group">
-      {" "}
       {Object.keys(lines.lines).map((key: string) => (
-        <Button key={key} variant={key === selectedTransportMode ? "outlined" : "contained"} onClick={() => handleChangeTransportMode(key)}>
+        <Button key={key} variant={key === selectedTransportMode ? "outlined" : "contained"} color="inherit" onClick={() => handleChangeTransportMode(key)}>
           {key} ({(lines?.count && lines.count[key]) || 0})
         </Button>
       ))}

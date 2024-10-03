@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
@@ -33,9 +32,8 @@ const Header: React.FunctionComponent = () => {
     <>
       <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }} />
       <CssBaseline />
-      <AppBar position="static" elevation={1} sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}>
         <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }} textAlign="left">
             Guillaume Damiens
           </Typography>
           <nav>
@@ -63,7 +61,6 @@ const Header: React.FunctionComponent = () => {
             {isAuthenticated ? "SE DÉCONNECTER" : "SE CONNECTER"}
           </Button>
         </Toolbar>
-      </AppBar>
       <LoginDialog loginDialogOpen={loginDialogOpen} setLoginDialogOpen={setLoginDialogOpen} />
     </>
   );

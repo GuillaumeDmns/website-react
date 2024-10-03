@@ -19,12 +19,27 @@ type Props = {
   selectedLine: string | null;
   selectedStop: IDFMStopArea | null;
   unitIDFM: UnitIDFMDTO | null;
+  loadingNextPassages: boolean;
 };
 
-const Timetable: React.FC<Props> = ({ selectedTransportMode, selectedLine, selectedStop, unitIDFM }: Props) => {
+const Timetable: React.FC<Props> = ({ selectedTransportMode, selectedLine, selectedStop, unitIDFM, loadingNextPassages }: Props) => {
   return selectedTransportMode && selectedLine && selectedStop && unitIDFM && unitIDFM.nextPassages && unitIDFM.nextPassageDestinations ? (
     <Grid item container spacing={2} justifyContent="center">
-      {unitIDFM.nextPassages.length > 0 && unitIDFM.nextPassageDestinations.length > 0 ? (
+      { loadingNextPassages ? (
+        [1, 2].map((item) => (
+            <Grid key={item} xs={12} md={6} lg={4} item>
+              <Grid container spacing={1} direction="column">
+                <Grid item style={{ textAlign: "center" }}>
+                  Loading...
+                </Grid>
+                <Grid item container direction="column" alignItems="center">
+                  <p>Chargement des informations...</p>
+                </Grid>
+              </Grid>
+            </Grid>
+        ))
+      ) :
+          unitIDFM.nextPassages.length > 0 && unitIDFM.nextPassageDestinations.length > 0 ? (
         unitIDFM.nextPassageDestinations.map((direction) => (
           <Grid key={direction} id={direction} xs={12} md={6} lg={4} item>
             <Grid container spacing={1} direction="column">
@@ -43,7 +58,8 @@ const Timetable: React.FC<Props> = ({ selectedTransportMode, selectedLine, selec
                       ({dayjs(passage.expectedDepartureTime ?? passage.aimedDepartureTime ?? passage.expectedArrivalTime).format("HH:mm")}){" "}
                       {passage.vehicleAtStop && <AtStop>À L&apos;ARRÊT</AtStop>}
                     </NextPassage>
-                  ))}
+                  ))
+                }
               </Grid>
             </Grid>
           </Grid>
