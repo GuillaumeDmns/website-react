@@ -2,8 +2,6 @@ import * as React from "react";
 import { Autocomplete, Box, IconButton, TextField } from "@mui/material";
 import { IDFMStopArea, StopsByLineDTO, UnitIDFMDTO } from "api/api.types";
 import { Refresh } from "@mui/icons-material";
-import { useCallback, useEffect, useState } from "react";
-import api from "api/api";
 
 type Props = {
   stops: StopsByLineDTO | null;
@@ -11,31 +9,10 @@ type Props = {
   selectedLine: string | null;
   selectedTransportMode: string | null;
   setSelectedStop: React.Dispatch<React.SetStateAction<IDFMStopArea | null>>;
-  setUnitIDFM: React.Dispatch<React.SetStateAction<UnitIDFMDTO | null>>;
+  loadNextPassages: () => Promise<void>;
 };
 
-const StopsList: React.FC<Props> = ({ stops, selectedStop, selectedLine, selectedTransportMode, setSelectedStop, setUnitIDFM }: Props) => {
-  const [isSelectedLineLoading, setIsSelectedLineLoading] = useState<boolean>(false);
-
-  const loadNextPassages = useCallback(async () => {
-    if (selectedTransportMode && selectedLine && selectedStop && selectedStop.id) {
-      setIsSelectedLineLoading(true);
-      try {
-        const response = await api.idfm.getStopNextPassage(selectedStop.id, selectedLine);
-        if (response && response.data && response.data.nextPassages) {
-          setUnitIDFM(response.data);
-          setIsSelectedLineLoading(false);
-        }
-      } catch (e) {
-      }
-    }
-  }, [selectedTransportMode, selectedLine, selectedStop, setUnitIDFM]);
-
-  useEffect(() => {
-    loadNextPassages()
-      // eslint-disable-next-line
-      .catch(console.error);
-  }, [loadNextPassages, selectedTransportMode, selectedLine, selectedStop]);
+const StopsList: React.FC<Props> = ({ stops, selectedStop, selectedLine, selectedTransportMode, setSelectedStop, loadNextPassages }: Props) => {
 
   return selectedTransportMode && selectedLine ? (
     <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 2, mb: 4 }}>

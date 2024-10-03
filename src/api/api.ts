@@ -5,8 +5,8 @@ import { LOCAL_STORAGE, getUsableToken } from "utils/authentication.utils";
 import endpoints from "./endpoints";
 import { FullMissionDTO, JwtDTO, LinesDTO, NextMissionsDTO, ReseauxDTO, StationsDTO, StopsByLineDTO, UnitIDFMDTO } from "./api.types";
 
-axios.defaults.baseURL = "https://guillaumedamiens.com/api";
-// axios.defaults.baseURL = "http://localhost:8080/api";
+// axios.defaults.baseURL = "https://guillaumedamiens.com/api";
+axios.defaults.baseURL = "http://localhost:8080/api";
 axios.defaults.timeout = 20000;
 axios.defaults.withCredentials = true;
 

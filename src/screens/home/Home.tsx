@@ -14,6 +14,8 @@ import TransportModesList from "components/idfm/TransportModesList";
 import LinesList from "components/idfm/LinesList";
 import StopsList from "components/idfm/StopsList";
 import Timetable from "components/idfm/Timetable";
+import api from "../../api/api.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -56,6 +58,8 @@ const Home: React.FC = () => {
       linesDTO.lines &&
       linesDTO.lines[selectedTransportMode].find((line) => line.id === selectedLineId)) ||
     undefined;
+
+  const [loadingNextPassages, getNextPassages] = useFetch((stopId: number, lineId: string) => api.idfm.getStopNextPassage(stopId, lineId));
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
