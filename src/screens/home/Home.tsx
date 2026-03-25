@@ -59,11 +59,11 @@ const Home: React.FC = () => {
       linesDTO.lines[selectedTransportMode].find((line) => line.id === selectedLineId)) ||
     undefined;
 
-  const [loadingNextPassages, getNextPassages] = useFetch(async (stopId: number, lineId: string) => {
+  const [loadingNextPassages, getNextPassages] = useFetch(React.useCallback(async (stopId: number, lineId: string) => {
     const response = await api.idfm.getStopNextPassage(stopId, lineId);
     setUnitIDFMDTO(response.data || null);
     return response.data;
-  });
+  }, []));
 
   React.useEffect(() => {
     if (selectedStop?.id && selectedLineId) {
