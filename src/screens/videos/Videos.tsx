@@ -1,5 +1,7 @@
 import React from "react";
-import ReactPlayer from "react-player";
+import ReactPlayerModule from "react-player";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const ReactPlayer = (ReactPlayerModule as any).default || ReactPlayerModule;
 import { Box, Grid, Paper, Typography } from "@mui/material";
 
 import Body from "components/body";
@@ -81,7 +83,7 @@ const Videos: React.FC = () => {
                       />
                     ) : (
                       <ReactPlayer
-                        url={video.url}
+                        src={video.url}
                         controls
                         width="100%"
                         height="100%"

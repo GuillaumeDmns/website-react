@@ -1,5 +1,6 @@
-import React from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Grid, Paper, Typography, Modal, Backdrop, Fade, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 import Body from "components/body";
 import street from "images/street.jpg";
@@ -15,6 +16,11 @@ import vienna from "images/vienne.jpg";
 import { motion } from "framer-motion";
 
 const Photos: React.FC = () => {
+  const [selectedPhoto, setSelectedPhoto] = useState<{ src: string; alt: string; title: string } | null>(null);
+
+  const handleOpen = (photo: { src: string; alt: string; title: string }) => setSelectedPhoto(photo);
+  const handleClose = () => setSelectedPhoto(null);
+
   const photos = [
     { src: street, alt: "street", title: "Night Street" },
     { src: lake, alt: "lake", title: "Slovak Lake" },
@@ -77,6 +83,7 @@ const Photos: React.FC = () => {
                     "&:hover img": { transform: "scale(1.1)" },
                     border: "1px solid rgba(148, 163, 184, 0.1)",
                   }}
+                  onClick={() => handleOpen(photo)}
                 >
                   <img
                     src={photo.src}
@@ -112,6 +119,77 @@ const Photos: React.FC = () => {
           ))}
         </Grid>
       </Box>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={Boolean(selectedPhoto)}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+            sx: { backgroundColor: "rgba(15, 23, 42, 0.9)", backdropFilter: "blur(8px)" }
+          },
+        }}
+      >
+        <Fade in={Boolean(selectedPhoto)}>
+          <Box sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "auto",
+            maxWidth: "95vw",
+            maxHeight: "95vh",
+            outline: "none",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}>
+            <IconButton
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                top: -48,
+                right: 0,
+                color: "white",
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" }
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Paper
+              elevation={24}
+              sx={{
+                borderRadius: "12px",
+                overflow: "hidden",
+                background: "transparent",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                lineHeight: 0
+              }}
+            >
+              <img
+                src={selectedPhoto?.src}
+                alt={selectedPhoto?.alt}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "85vh",
+                  objectFit: "contain",
+                  display: "block"
+                }}
+              />
+              <Box sx={{ p: 2, backgroundColor: "rgba(30, 41, 59, 0.8)", backdropFilter: "blur(10px)" }}>
+                <Typography variant="h6" sx={{ color: "white", textAlign: "center", fontWeight: 700 }}>
+                  {selectedPhoto?.title}
+                </Typography>
+              </Box>
+            </Paper>
+          </Box>
+        </Fade>
+      </Modal>
     </Body>
   );
 };
