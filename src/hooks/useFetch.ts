@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useFetch = <T>(func: (...arg: any) => T | undefined): [boolean, (...arg: any) => Promise<T | undefined>] => {
+const useFetch = <T>(func: (...arg: any) => Promise<T | undefined> | T | undefined): [boolean, (...arg: any) => Promise<T | undefined>] => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchData = async (...arg: any): Promise<T | undefined> => {

@@ -13,10 +13,9 @@ type Props = {
   selectedLine: string | null;
   selectedStop: IDFMStopArea | null;
   unitIDFM: UnitIDFMDTO | null;
-  loadingNextPassages: boolean;
 };
 
-const Timetable: React.FC<Props> = ({ selectedTransportMode, selectedLine, selectedStop, unitIDFM, loadingNextPassages }: Props) => {
+const Timetable: React.FC<Props> = ({ selectedTransportMode, selectedLine, selectedStop, unitIDFM }: Props) => {
   return selectedTransportMode && selectedLine && selectedStop && unitIDFM && unitIDFM.nextPassages && unitIDFM.nextPassageDestinations ? (
     <Box sx={{ width: "100%", mt: 2 }}>
       {unitIDFM.nextPassages && unitIDFM.nextPassageDestinations && unitIDFM.nextPassages.length > 0 && unitIDFM.nextPassageDestinations.length > 0 ? (
