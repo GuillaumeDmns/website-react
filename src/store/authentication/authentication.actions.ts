@@ -5,6 +5,7 @@ import api from "api/api";
 import { AuthenticationActionTypes, ACTION_TYPES } from "./authentication.types";
 
 export const loginUser =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (login: string, password: string): any =>
   async (dispatch: Dispatch<AuthenticationActionTypes>) => {
     let willUserBeAuthenticated = false;
@@ -17,7 +18,8 @@ export const loginUser =
           willUserBeAuthenticated = true;
         }
       }
-    } catch (e) {
+    } catch (error) {
+      console.error("Login failed:", error);
       willUserBeAuthenticated = false;
     }
 

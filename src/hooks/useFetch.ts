@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
-const useFetch = <T>(func: (...arg: any) => Promise<T | undefined> | T | undefined): [boolean, (...arg: any) => Promise<T | undefined>] => {
+const useFetch = <T, Args extends unknown[]>(func: (...arg: Args) => Promise<T | undefined> | T | undefined): [boolean, (...arg: Args) => Promise<T | undefined>] => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchData = async (...arg: any): Promise<T | undefined> => {
+  const fetchData = useCallback(async (...arg: Args): Promise<T | undefined> => {
     setIsLoading(true);
 
     try {
@@ -14,7 +14,7 @@ const useFetch = <T>(func: (...arg: any) => Promise<T | undefined> | T | undefin
       setIsLoading(false);
     }
     return;
-  };
+  }, [func]);
 
   return [isLoading, fetchData];
 };

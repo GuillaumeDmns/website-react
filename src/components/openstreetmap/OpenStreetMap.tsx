@@ -8,7 +8,7 @@ import { IDFMStopArea, LineDTO, StopsByLineDTO } from "api/api.types";
 import icon from "leaflet/dist/images/marker-icon.png";
 import "leaflet/dist/leaflet.css";
 
-let DefaultIcon = L.icon({
+const DefaultIcon = L.icon({
   iconUrl: icon,
   iconSize: [20, 32.8],
   iconAnchor: [10, 32.8],
@@ -40,7 +40,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
   useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
     map.flyTo([selectedStop.latitude || 0, selectedStop.longitude || 0]);
-  }, [isAuthenticated, selectedStop]);
+  }, [isAuthenticated, selectedStop, map]);
 
   useEffect(() => {
     if (stopsByLine) {
@@ -82,7 +82,7 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
     } else {
       setCurrentMarkers([]);
     }
-  }, [stopsByLine]);
+  }, [stopsByLine, map]);
 
   const geoJsonStyle = {
     color: lineColor

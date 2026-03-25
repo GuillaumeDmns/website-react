@@ -34,7 +34,8 @@ const TransportModesList: React.FC<Props> = ({
           if (response?.data?.count && Object.keys(response.data.count).length > 0) {
             setLines(response.data);
           }
-        } catch (e) {
+        } catch (error) {
+          console.error("Error loading lines:", error);
         }
       }
     })();
