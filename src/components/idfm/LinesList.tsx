@@ -24,7 +24,8 @@ const LinesList: React.FC<Props> = ({ lines, setStops, selectedLine, selectedTra
           if (response && response.data && response.data.stops) {
             setStops(response.data);
           }
-        } catch (e) {
+        } catch (error) {
+          console.error("Error loading stops:", error);
         }
       }
     })();

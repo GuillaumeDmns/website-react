@@ -19,9 +19,8 @@ const refreshToken = async (): Promise<void> => {
     if (response && response.data && response.data.jwt) {
       localStorage.setItem(LOCAL_STORAGE.JWT, response.data.jwt);
     }
-  } catch (e) {
-    // eslint-disable-next-line
-    console.log(e);
+  } catch (error) {
+    console.error("Token refresh failed:", error);
   }
 };
 
@@ -31,7 +30,8 @@ export const getUsableToken = (): string => {
   let jwtDecoded: GdaJwtPayload | null;
   try {
     jwtDecoded = jwtDecode<GdaJwtPayload>(jwtLocalStorage);
-  } catch (e) {
+  } catch (error) {
+    console.error("JWT Decode failed:", error);
     jwtDecoded = null;
   }
 

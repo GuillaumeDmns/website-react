@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-const useFetch = <T>(func: (...arg: any) => Promise<T | undefined> | T | undefined): [boolean, (...arg: any) => Promise<T | undefined>] => {
+const useFetch = <T, Args extends unknown[]>(func: (...arg: Args) => Promise<T | undefined> | T | undefined): [boolean, (...arg: Args) => Promise<T | undefined>] => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchData = async (...arg: any): Promise<T | undefined> => {
+  const fetchData = async (...arg: Args): Promise<T | undefined> => {
     setIsLoading(true);
 
     try {

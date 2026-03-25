@@ -66,10 +66,10 @@ const Home: React.FC = () => {
   });
 
   React.useEffect(() => {
-    if (selectedStop && selectedLineId) {
+    if (selectedStop?.id && selectedLineId) {
       getNextPassages(selectedStop.id, selectedLineId);
     }
-  }, [selectedStop, selectedLineId]);
+  }, [selectedStop, selectedLineId, getNextPassages]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
                           selectedTransportMode={selectedTransportMode}
                           setSelectedStop={setSelectedStop}
                           loadNextPassages={async () => {
-                            if (selectedStop && selectedLineId) {
+                            if (selectedStop?.id && selectedLineId) {
                               await getNextPassages(selectedStop.id, selectedLineId);
                             }
                           }}

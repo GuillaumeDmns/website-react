@@ -16,7 +16,7 @@ const OpenStreetMapContainer: React.FC<Props> = (props: Props) => {
   const [lat] = useState(48.864716);
   const [zoom] = useState(11);
 
-  const mapContainer = useRef<any>(null);
+  const mapContainer = useRef<L.Map | null>(null);
 
   return (
     <div id="map" style={{ width: "100%", height: "100%" }}>
