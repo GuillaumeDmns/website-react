@@ -14,6 +14,8 @@ import TransportModesList from "components/idfm/TransportModesList";
 import LinesList from "components/idfm/LinesList";
 import StopsList from "components/idfm/StopsList";
 import Timetable from "components/idfm/Timetable";
+import api from "../../api/api.ts";
+import useFetch from "../../hooks/useFetch.ts";
 
 dayjs.extend(relativeTime);
 dayjs.locale("fr");
@@ -21,18 +23,18 @@ dayjs.locale("fr");
 // Helper component for Step Titles
 const StepHeader: React.FC<{ step: number; title: string; active?: boolean }> = ({ step, title, active }) => (
   <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5 }}>
-    <Chip 
-      label={step} 
-      size="small" 
-      color={active ? "primary" : "default"} 
-      sx={{ 
-        height: 24, 
-        width: 24, 
-        minWidth: 24, 
-        p: 0, 
+    <Chip
+      label={step}
+      size="small"
+      color={active ? "primary" : "default"}
+      sx={{
+        height: 24,
+        width: 24,
+        minWidth: 24,
+        p: 0,
         fontWeight: 700,
         "& .MuiChip-label": { px: 0 }
-      }} 
+      }}
     />
     <Typography variant="overline" sx={{ fontWeight: 700, letterSpacing: 1, opacity: active ? 1 : 0.6 }}>
       {title}
@@ -56,6 +58,18 @@ const Home: React.FC = () => {
       linesDTO.lines &&
       linesDTO.lines[selectedTransportMode].find((line) => line.id === selectedLineId)) ||
     undefined;
+
+  const [loadingNextPassages, getNextPassages] = useFetch(async (stopId: number, lineId: string) => {
+    const response = await api.idfm.getStopNextPassage(stopId, lineId);
+    setUnitIDFMDTO(response.data || null);
+    return response.data;
+  });
+
+  React.useEffect(() => {
+    if (selectedStop && selectedLineId) {
+      getNextPassages(selectedStop.id, selectedLineId);
+    }
+  }, [selectedStop, selectedLineId]);
 
   const handleClickOpenLoginDialog = () => setLoginDialogOpen(true);
 
@@ -96,8 +110,8 @@ const Home: React.FC = () => {
   return (
     <Body>
       {isAuthenticated ? (
-        <Grid 
-          container 
+        <Grid
+          container
           spacing={3}
           component={motion.div}
           initial="hidden"
@@ -107,10 +121,10 @@ const Home: React.FC = () => {
           {/* Sidebar / Selection Area */}
           <Grid item xs={12} lg={4}>
             <motion.div variants={itemVariants}>
-              <Paper 
+              <Paper
                 elevation={0}
-                sx={{ 
-                  p: 3, 
+                sx={{
+                  p: 3,
                   borderRadius: "20px",
                   background: "rgba(30, 41, 59, 0.4)",
                   backdropFilter: "blur(10px)",
@@ -120,9 +134,9 @@ const Home: React.FC = () => {
                 }}
               >
                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 800, mb: 3, color: "primary.light" }}>
-                  Configuration du Trajet
+                  Trajet
                 </Typography>
-                
+
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                   {/* Step 1: Mode */}
                   <Box>
@@ -140,12 +154,12 @@ const Home: React.FC = () => {
                   <AnimatePresence>
                     {/* Step 2: Line */}
                     {selectedTransportMode && (
-                      <Box 
-                        component={motion.div} 
+                      <Box
+                        component={motion.div}
                         key="step2"
-                        variants={stepVariants} 
-                        initial="hidden" 
-                        animate="visible" 
+                        variants={stepVariants}
+                        initial="hidden"
+                        animate="visible"
                         exit="exit"
                       >
                         <StepHeader step={2} title="Lignes" active />
@@ -162,12 +176,12 @@ const Home: React.FC = () => {
 
                     {/* Step 3: Stop */}
                     {selectedLineId && (
-                      <Box 
-                        component={motion.div} 
+                      <Box
+                        component={motion.div}
                         key="step3"
-                        variants={stepVariants} 
-                        initial="hidden" 
-                        animate="visible" 
+                        variants={stepVariants}
+                        initial="hidden"
+                        animate="visible"
                         exit="exit"
                       >
                         <StepHeader step={3} title="Arrêt" active />
@@ -177,7 +191,12 @@ const Home: React.FC = () => {
                           selectedLine={selectedLineId}
                           selectedTransportMode={selectedTransportMode}
                           setSelectedStop={setSelectedStop}
-                          setUnitIDFM={setUnitIDFMDTO}
+                          loadNextPassages={async () => {
+                            if (selectedStop && selectedLineId) {
+                              await getNextPassages(selectedStop.id, selectedLineId);
+                            }
+                          }}
+                          isLoading={loadingNextPassages}
                         />
                       </Box>
                     )}
@@ -189,22 +208,22 @@ const Home: React.FC = () => {
 
           {/* Main Content Area */}
           <Grid item xs={12} lg={8}>
-            <Box 
+            <Box
               component={motion.div}
               variants={mainAreaVariants}
               sx={{ display: "flex", flexDirection: "column", gap: 3 }}
             >
               <AnimatePresence>
                 {/* Map Section - Always visible if authenticated */}
-                <Box 
+                <Box
                   key="map-section"
                   component={motion.div}
                   layout
                 >
-                  <Paper 
+                  <Paper
                     elevation={0}
-                    sx={{ 
-                      borderRadius: "20px", 
+                    sx={{
+                      borderRadius: "20px",
                       overflow: "hidden",
                       border: "1px solid rgba(148, 163, 184, 0.1)",
                       height: "400px"
@@ -221,7 +240,7 @@ const Home: React.FC = () => {
 
                 {/* Timetable Section - Visible when stop is selected */}
                 {selectedStop && (
-                  <Box 
+                  <Box
                     key="timetable-section"
                     component={motion.div}
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -242,15 +261,15 @@ const Home: React.FC = () => {
           </Grid>
         </Grid>
       ) : (
-        <Paper 
+        <Paper
           component={motion.div}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
           elevation={0}
-          sx={{ 
-            p: 6, 
-            textAlign: "center", 
+          sx={{
+            p: 6,
+            textAlign: "center",
             borderRadius: "24px",
             background: "rgba(30, 41, 59, 0.4)",
             backdropFilter: "blur(10px)",
@@ -266,10 +285,10 @@ const Home: React.FC = () => {
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
             Connectez-vous pour accéder à vos informations de transport en temps réel.
           </Typography>
-          <Button 
-            size="large" 
-            variant="contained" 
-            color="primary" 
+          <Button
+            size="large"
+            variant="contained"
+            color="primary"
             onClick={handleClickOpenLoginDialog}
             sx={{ px: 4 }}
           >

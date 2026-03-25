@@ -35,8 +35,6 @@ const TransportModesList: React.FC<Props> = ({
             setLines(response.data);
           }
         } catch (e) {
-          // eslint-disable-next-line
-          console.log(e);
         }
       }
     })();

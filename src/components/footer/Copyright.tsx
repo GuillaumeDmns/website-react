@@ -1,6 +1,5 @@
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import React from "react";
 
 const Copyright = () => {
   return (
