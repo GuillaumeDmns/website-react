@@ -1,6 +1,5 @@
 import * as React from "react";
-import { ButtonGroup } from "@mui/material";
-import Button from "@mui/material/Button";
+import { Box, Chip } from "@mui/material";
 
 import { IDFMStopArea, LinesDTO } from "api/api.types";
 import { useEffect } from "react";
@@ -50,14 +49,35 @@ const TransportModesList: React.FC<Props> = ({
   };
 
   return lines?.lines ? (
-    <ButtonGroup size="large" aria-label="large button group">
-      {" "}
+    <Box 
+      sx={{ 
+        display: "flex", 
+        flexWrap: "wrap", 
+        gap: 1.5, 
+        mb: 3, 
+        width: "100%", 
+        justifyContent: "center" 
+      }}
+    >
       {Object.keys(lines.lines).map((key: string) => (
-        <Button key={key} variant={key === selectedTransportMode ? "outlined" : "contained"} onClick={() => handleChangeTransportMode(key)}>
-          {key} ({(lines?.count && lines.count[key]) || 0})
-        </Button>
+        <Chip
+          key={key}
+          label={`${key} (${(lines?.count && lines.count[key]) || 0})`}
+          onClick={() => handleChangeTransportMode(key)}
+          variant={key === selectedTransportMode ? "filled" : "outlined"}
+          color={key === selectedTransportMode ? "primary" : "default"}
+          sx={{
+            px: 1,
+            fontWeight: 600,
+            transition: "all 0.2s",
+            "&:hover": { transform: "translateY(-1px)" },
+            ...(key === selectedTransportMode && {
+              boxShadow: "0 4px 12px rgba(59, 130, 246, 0.4)",
+            }),
+          }}
+        />
       ))}
-    </ButtonGroup>
+    </Box>
   ) : null;
 };
 

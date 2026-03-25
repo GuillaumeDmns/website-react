@@ -7,6 +7,8 @@ import { Link as RouterLink } from "react-router-dom";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "store/types";
 import action from "store/actions";
@@ -33,36 +35,64 @@ const Header: React.FunctionComponent = () => {
     <>
       <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }} />
       <CssBaseline />
-      <AppBar position="static" elevation={1} sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}>
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            Guillaume Damiens
-          </Typography>
-          <nav>
-            {headerLinks.map((link) => (
-              <Link
-                key={link.name}
-                variant="button"
-                color="text.primary"
-                component={RouterLink}
-                underline="none"
-                to={link.path}
-                sx={{ my: 1, mx: 1.5 }}
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          background: "rgba(15, 23, 42, 0.8)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid rgba(148, 163, 184, 0.1)",
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+            <Typography
+              variant="h5"
+              noWrap
+              component={RouterLink}
+              to="/"
+              sx={{
+                fontWeight: 800,
+                letterSpacing: "-0.025em",
+                color: "inherit",
+                textDecoration: "none",
+                background: "linear-gradient(135deg, #3b82f6 0%, #10b981 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Guillaume Damiens
+            </Typography>
+            
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <nav style={{ display: "flex", gap: "1.5rem" }}>
+                {headerLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    component={RouterLink}
+                    to={link.path}
+                    sx={{ 
+                      color: "text.primary",
+                      fontWeight: 500,
+                      fontSize: "0.95rem",
+                      opacity: 0.8,
+                      "&:hover": { opacity: 1, color: "primary.light" }
+                    }}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+              <Button
+                color="primary"
+                variant={isAuthenticated ? "outlined" : "contained"}
+                onClick={isAuthenticated ? handleLogout : handleClickOpenLoginDialog}
+                sx={{ ml: 2 }}
               >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
-          <Button
-            href="#"
-            color="inherit"
-            variant="outlined"
-            sx={{ my: 1, mx: 1.5 }}
-            onClick={isAuthenticated ? handleLogout : handleClickOpenLoginDialog}
-          >
-            {isAuthenticated ? "SE DÉCONNECTER" : "SE CONNECTER"}
-          </Button>
-        </Toolbar>
+                {isAuthenticated ? "Deconnexion" : "Connexion"}
+              </Button>
+            </Box>
+          </Toolbar>
+        </Container>
       </AppBar>
       <LoginDialog loginDialogOpen={loginDialogOpen} setLoginDialogOpen={setLoginDialogOpen} />
     </>

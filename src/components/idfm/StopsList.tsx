@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Autocomplete, Grid, IconButton, TextField } from "@mui/material";
+import { Autocomplete, Box, IconButton, TextField } from "@mui/material";
 import { IDFMStopArea, StopsByLineDTO, UnitIDFMDTO } from "api/api.types";
 import { Refresh } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
@@ -40,23 +40,44 @@ const StopsList: React.FC<Props> = ({ stops, selectedStop, selectedLine, selecte
   }, [loadNextPassages, selectedTransportMode, selectedLine, selectedStop]);
 
   return selectedTransportMode && selectedLine ? (
-    <Grid container justifyContent="center" alignItems="center">
+    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 2, mb: 4 }}>
       <Autocomplete
         value={selectedStop}
         onChange={(event: React.SyntheticEvent, newSelectedStop: IDFMStopArea | null) => {
           setSelectedStop(newSelectedStop);
         }}
-        style={{ width: 300 }}
-        size="small"
+        sx={{ width: 400 }}
+        size="medium"
         options={stops?.stops || ([] as Array<IDFMStopArea>)}
         autoHighlight
         getOptionLabel={(stop: IDFMStopArea) => stop.name || ""}
-        renderInput={(params) => <TextField {...params} label="Choisissez un arrêt" variant="outlined" />}
+        renderInput={(params) => (
+          <TextField 
+            {...params} 
+            label="Choisir un arrêt" 
+            variant="outlined" 
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "12px",
+                backgroundColor: "rgba(30, 41, 59, 0.5)",
+                backdropFilter: "blur(4px)",
+              }
+            }}
+          />
+        )}
       />
-      <IconButton color="primary" aria-label="refresh" component="label" disabled={isSelectedLineLoading} onClick={loadNextPassages}>
+      <IconButton 
+        color="primary" 
+        disabled={isSelectedLineLoading} 
+        onClick={loadNextPassages}
+        sx={{ 
+          backgroundColor: "rgba(59, 130, 246, 0.1)",
+          "&:hover": { backgroundColor: "rgba(59, 130, 246, 0.2)" }
+        }}
+      >
         <Refresh />
       </IconButton>
-    </Grid>
+    </Box>
   ) : null;
 };
 
