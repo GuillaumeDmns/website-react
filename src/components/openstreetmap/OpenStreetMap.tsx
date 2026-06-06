@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import L from "leaflet";
 import { useSelector } from "react-redux";
 import { GeoJSON, Marker, Popup, useMap } from "react-leaflet";
@@ -30,12 +30,37 @@ type MarkersAndPopus = {
 };
 
 const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLine, setSelectedStop }: Props) => {
-  const [currentMarkers, setCurrentMarkers] = useState<Array<MarkersAndPopus>>([]);
   const isAuthenticated: boolean = useSelector((state: IRootState) => state.authentication.isAuthenticated);
-
   const map = useMap();
 
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+
+    const container = map.getContainer();
+    if (container) {
+      resizeObserver.observe(container);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [map]);
+
   const lineColor: string | undefined = selectedLine && selectedLine.lineIdBackgroundColor ? `#${selectedLine.lineIdBackgroundColor}` : undefined;
+
+  const currentMarkers: Array<MarkersAndPopus> = useMemo(() => {
+    if (!stopsByLine || !stopsByLine.stops) return [];
+
+    return stopsByLine.stops
+      .filter((stop) => stop.latitude && stop.longitude && stop.name)
+      .map((stop) => ({
+        lat: stop.latitude!,
+        lng: stop.longitude!,
+        stopName: stop.name!,
+      }));
+  }, [stopsByLine]);
 
   useEffect(() => {
     if (!isAuthenticated || !selectedStop) return;
@@ -43,49 +68,34 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
   }, [isAuthenticated, selectedStop, map]);
 
   useEffect(() => {
-    if (stopsByLine) {
-      const newMarkersAndPopus: Array<MarkersAndPopus> = [];
-      stopsByLine.stops?.map((stop) => {
-        if (stop.longitude && stop.latitude && stop.name) {
-          const markerAndPopup: MarkersAndPopus = { lat: stop.latitude, lng: stop.longitude, stopName: stop.name };
-          // marker.getElement().addEventListener("click", () => setSelectedStop(stop));
-          newMarkersAndPopus.push(markerAndPopup);
-        }
-      });
-      setCurrentMarkers(newMarkersAndPopus);
+    if (stopsByLine && stopsByLine.stops && stopsByLine.stops.length > 0) {
+      const minLat =
+        stopsByLine.stops.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude < prev.latitude ? curr : prev))
+          .latitude || 0;
+      const maxLat =
+        stopsByLine.stops.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude > prev.latitude ? curr : prev))
+          .latitude || 0;
+      const minLong =
+        stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude < prev.longitude ? curr : prev))
+          .longitude || 0;
+      const maxLong =
+        stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude > prev.longitude ? curr : prev))
+          .longitude || 0;
 
-      if (stopsByLine.stops && stopsByLine.stops.length > 0) {
-        const minLat =
-          stopsByLine.stops.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude < prev.latitude ? curr : prev))
-            .latitude || 0;
-        const maxLat =
-          stopsByLine.stops.reduce((prev, curr) => (curr.latitude && prev.latitude && curr.latitude > prev.latitude ? curr : prev))
-            .latitude || 0;
-        const minLong =
-          stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude < prev.longitude ? curr : prev))
-            .longitude || 0;
-        const maxLong =
-          stopsByLine.stops.reduce((prev, curr) => (curr.longitude && prev.longitude && curr.longitude > prev.longitude ? curr : prev))
-            .longitude || 0;
-        map.fitBounds(
-          [
-            [minLat, minLong],
-            [maxLat, maxLong],
-          ],
-          {
-            padding: [40, 40],
-          }
-        );
-      }
-
-      // map.current.addLayer({})
-    } else {
-      setCurrentMarkers([]);
+      map.fitBounds(
+        [
+          [minLat, minLong],
+          [maxLat, maxLong],
+        ],
+        {
+          padding: [40, 40],
+        },
+      );
     }
   }, [stopsByLine, map]);
 
   const geoJsonStyle = {
-    color: lineColor
+    color: lineColor,
   };
 
   const iconsStyle = `
@@ -98,13 +108,13 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
   position: relative;
   border-radius: 3rem 3rem 0;
   transform: rotate(45deg);
-  border: 1px solid #FFFFFF`
+  border: 1px solid #FFFFFF`;
 
   const markerIcon = L.divIcon({
     className: "custom-pin",
     iconAnchor: [-14, -6],
     popupAnchor: [-2, 0],
-    html: `<span style="${iconsStyle}" />`
+    html: `<span style="${iconsStyle}" />`,
   });
 
   return (
@@ -123,9 +133,9 @@ const OpenStreetMap: React.FC<Props> = ({ stopsByLine, selectedStop, selectedLin
           <Popup>{marker.stopName}</Popup>
         </Marker>
       ))}
-      {selectedLine && stopsByLine && stopsByLine.shape &&
+      {selectedLine && stopsByLine && stopsByLine.shape && (
         <GeoJSON key={selectedLine.id} data={JSON.parse(stopsByLine.shape)} style={geoJsonStyle} />
-      }
+      )}
     </>
   );
 };
