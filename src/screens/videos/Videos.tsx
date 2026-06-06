@@ -36,19 +36,13 @@ const Videos: React.FC = () => {
 
   return (
     <Body>
-      <Box
-        component={motion.div}
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        sx={{ width: "100%" }}
-      >
+      <Box component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ width: "100%" }}>
         <Typography variant="h3" gutterBottom sx={{ fontWeight: 800, mb: 4, textAlign: "center" }}>
           Vidéos
         </Typography>
-        <Grid container spacing={4} justifyContent="center">
+        <Grid container spacing={4} sx={{ justifyContent: "center" }}>
           {videos.map((video, index) => (
-            <Grid item xs={12} md={6} key={index}>
+            <Grid size={{ xs: 12, md: 6 }} key={index}>
               <motion.div variants={itemVariants}>
                 <Paper
                   elevation={0}
@@ -82,13 +76,7 @@ const Videos: React.FC = () => {
                         allowFullScreen
                       />
                     ) : (
-                      <ReactPlayer
-                        src={video.url}
-                        controls
-                        width="100%"
-                        height="100%"
-                        style={{ position: "absolute", top: 0, left: 0 }}
-                      />
+                      <ReactPlayer src={video.url} controls width="100%" height="100%" style={{ position: "absolute", top: 0, left: 0 }} />
                     )}
                   </Box>
                   <Box sx={{ p: 3 }}>

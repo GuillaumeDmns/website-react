@@ -57,19 +57,13 @@ const Photos: React.FC = () => {
 
   return (
     <Body>
-      <Box
-        component={motion.div}
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-        sx={{ width: "100%" }}
-      >
+      <Box component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ width: "100%" }}>
         <Typography variant="h3" gutterBottom sx={{ fontWeight: 800, mb: 4, textAlign: "center" }}>
           Ma Galerie Photos
         </Typography>
         <Grid container spacing={3}>
           {photos.map((photo, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <motion.div variants={itemVariants}>
                 <Paper
                   elevation={0}
@@ -130,24 +124,26 @@ const Photos: React.FC = () => {
         slotProps={{
           backdrop: {
             timeout: 500,
-            sx: { backgroundColor: "rgba(15, 23, 42, 0.9)", backdropFilter: "blur(8px)" }
+            sx: { backgroundColor: "rgba(15, 23, 42, 0.9)", backdropFilter: "blur(8px)" },
           },
         }}
       >
         <Fade in={Boolean(selectedPhoto)}>
-          <Box sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "auto",
-            maxWidth: "95vw",
-            maxHeight: "95vh",
-            outline: "none",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
-          }}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "auto",
+              maxWidth: "95vw",
+              maxHeight: "95vh",
+              outline: "none",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <IconButton
               onClick={handleClose}
               sx={{
@@ -156,7 +152,7 @@ const Photos: React.FC = () => {
                 right: 0,
                 color: "white",
                 backgroundColor: "rgba(255, 255, 255, 0.1)",
-                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" }
+                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
               }}
             >
               <CloseIcon />
@@ -168,7 +164,7 @@ const Photos: React.FC = () => {
                 overflow: "hidden",
                 background: "transparent",
                 border: "1px solid rgba(255, 255, 255, 0.1)",
-                lineHeight: 0
+                lineHeight: 0,
               }}
             >
               <img
@@ -178,7 +174,7 @@ const Photos: React.FC = () => {
                   maxWidth: "100%",
                   maxHeight: "85vh",
                   objectFit: "contain",
-                  display: "block"
+                  display: "block",
                 }}
               />
               <Box sx={{ p: 2, backgroundColor: "rgba(30, 41, 59, 0.8)", backdropFilter: "blur(10px)" }}>

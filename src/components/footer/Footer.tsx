@@ -38,22 +38,22 @@ const Footer: React.FC = () => (
     }}
   >
     <Container maxWidth="lg">
-      <Grid container spacing={4} justifyContent="space-between">
+      <Grid container spacing={4} sx={{ justifyContent: "space-between"}}>
         {footers.map((footer) => (
-          <Grid item xs={12} sm={4} key={footer.title}>
+          <Grid size={{ xs: 12, sm: 4 }} key={footer.title}>
             <Typography variant="h6" color="text.primary" gutterBottom sx={{ fontWeight: 700 }}>
               {footer.title}
             </Typography>
             <Box component="ul" sx={{ p: 0, m: 0, listStyle: "none" }}>
               {footer.description.map((item) => (
                 <Box component="li" key={item.name} sx={{ py: 0.5 }}>
-                  <Link 
-                    href={item.link} 
-                    variant="body2" 
+                  <Link
+                    href={item.link}
+                    variant="body2"
                     color="text.secondary"
-                    sx={{ 
+                    sx={{
                       transition: "color 0.2s",
-                      "&:hover": { color: "primary.main" }
+                      "&:hover": { color: "primary.main" },
                     }}
                   >
                     {item.name}
@@ -63,7 +63,7 @@ const Footer: React.FC = () => (
             </Box>
           </Grid>
         ))}
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Typography variant="h6" color="text.primary" gutterBottom sx={{ fontWeight: 700 }}>
             Contact
           </Typography>
