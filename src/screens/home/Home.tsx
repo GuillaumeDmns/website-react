@@ -110,16 +110,9 @@ const Home: React.FC = () => {
   return (
     <Body>
       {isAuthenticated ? (
-        <Grid
-          container
-          spacing={3}
-          component={motion.div}
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-        >
+        <Grid container spacing={3} component={motion.div} initial="hidden" animate="visible" variants={containerVariants}>
           {/* Sidebar / Selection Area */}
-          <Grid item xs={12} lg={4}>
+          <Grid size={{ xs: 12, lg: 4 }}>
             <motion.div variants={itemVariants}>
               <Paper
                 elevation={0}
@@ -154,14 +147,7 @@ const Home: React.FC = () => {
                   <AnimatePresence>
                     {/* Step 2: Line */}
                     {selectedTransportMode && (
-                      <Box
-                        component={motion.div}
-                        key="step2"
-                        variants={stepVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                      >
+                      <Box component={motion.div} key="step2" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
                         <StepHeader step={2} title="Lignes" active />
                         <LinesList
                           lines={linesDTO}
@@ -176,14 +162,7 @@ const Home: React.FC = () => {
 
                     {/* Step 3: Stop */}
                     {selectedLineId && (
-                      <Box
-                        component={motion.div}
-                        key="step3"
-                        variants={stepVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                      >
+                      <Box component={motion.div} key="step3" variants={stepVariants} initial="hidden" animate="visible" exit="exit">
                         <StepHeader step={3} title="Arrêt" active />
                         <StopsList
                           stops={stopsDTO}
@@ -207,26 +186,18 @@ const Home: React.FC = () => {
           </Grid>
 
           {/* Main Content Area */}
-          <Grid item xs={12} lg={8}>
-            <Box
-              component={motion.div}
-              variants={mainAreaVariants}
-              sx={{ display: "flex", flexDirection: "column", gap: 3 }}
-            >
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <Box component={motion.div} variants={mainAreaVariants} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
               <AnimatePresence>
                 {/* Map Section - Always visible if authenticated */}
-                <Box
-                  key="map-section"
-                  component={motion.div}
-                  layout
-                >
+                <Box key="map-section" component={motion.div} layout>
                   <Paper
                     elevation={0}
                     sx={{
                       borderRadius: "20px",
                       overflow: "hidden",
                       border: "1px solid rgba(148, 163, 184, 0.1)",
-                      height: "400px"
+                      height: "400px",
                     }}
                   >
                     <OpenStreetMapContainer
@@ -276,7 +247,7 @@ const Home: React.FC = () => {
             border: "1px solid rgba(148, 163, 184, 0.1)",
             maxWidth: "500px",
             mx: "auto",
-            mt: 4
+            mt: 4,
           }}
         >
           <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
@@ -285,13 +256,7 @@ const Home: React.FC = () => {
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
             Connectez-vous pour accéder à vos informations de transport en temps réel.
           </Typography>
-          <Button
-            size="large"
-            variant="contained"
-            color="primary"
-            onClick={handleClickOpenLoginDialog}
-            sx={{ px: 4 }}
-          >
+          <Button size="large" variant="contained" color="primary" onClick={handleClickOpenLoginDialog} sx={{ px: 4 }}>
             Se connecter
           </Button>
         </Paper>
