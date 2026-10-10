@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 // ts-ignore
 import { LOCAL_STORAGE, getUsableToken } from "utils/authentication.utils";
 import endpoints from "./endpoints";
-import { FullMissionDTO, JwtDTO, LinesDTO, NextMissionsDTO, ReseauxDTO, StationsDTO, StopsByLineDTO, UnitIDFMDTO } from "./api.types";
+import { JwtDTO, LinesDTO, StopsByLineDTO, UnitIDFMDTO } from "./api.types";
 
 // `npm run dev` uses the local backend, the production build the production one
 axios.defaults.baseURL = import.meta.env.DEV ? "http://localhost:8080/api" : "https://guillaumedamiens.com/api";
@@ -47,40 +47,11 @@ const api = {
       });
     },
   },
-
-  ratp: {
-    getReseaux: (): Promise<AxiosResponse<ReseauxDTO>> => {
-      return axs.get<ReseauxDTO>(endpoints.ratp.getReseaux);
-    },
-    getStationsByLineIdAndStationName: (lineId: string, stationName: string): Promise<AxiosResponse<StationsDTO>> => {
-      return axs.get<StationsDTO>(endpoints.ratp.getStationsByLineId, {
-        params: {
-          lineId,
-          stationName,
-        },
-      });
-    },
-    getNextMissionsByLineAndStation: (lineId: string, stationId: string): Promise<AxiosResponse<NextMissionsDTO>> => {
-      return axs.get<NextMissionsDTO>(endpoints.ratp.getNextMissionsByLineAndStation, {
-        params: {
-          lineId,
-          stationId,
-        },
-      });
-    },
-    getFullMissionByLine: (lineId: string): Promise<AxiosResponse<FullMissionDTO>> => {
-      return axs.get<FullMissionDTO>(endpoints.ratp.getFullMissionByLine, {
-        params: {
-          lineId,
-        },
-      });
-    },
-  },
 };
 
 axs.interceptors.request.use(async (request) => {
   const { url = "" } = request;
-  let token = "";
+  let token: string;
 
   if (url.includes(endpoints.authentication.signIn) || url.includes(endpoints.authentication.refresh)) {
     token = localStorage.getItem(LOCAL_STORAGE.JWT) || "";

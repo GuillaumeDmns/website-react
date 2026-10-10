@@ -8,13 +8,6 @@ const endpoints = {
     getStopsByLine: `stops-by-line`,
     getStopNextPassage: `get-stop-next-passages`,
   },
-  ratp: {
-    getReseaux: `reseaux`,
-    getLinesByReseauId: `lines`,
-    getStationsByLineId: `stations`,
-    getNextMissionsByLineAndStation: `next`,
-    getFullMissionByLine: `full-mission`,
-  },
 };
 
 export default endpoints;
