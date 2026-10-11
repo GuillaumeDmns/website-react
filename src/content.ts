@@ -150,7 +150,9 @@ export const videos: Video[] = [
 ];
 
 export const legal = {
-  publisher: "Guillaume Damiens, à titre personnel et non commercial. Contact : contact@guillaumedamiens.com",
+  publisher: "Guillaume Damiens, à titre personnel et non commercial.",
+  // Gandi's relay to the domain's owner (whois), which forwards to them
+  contact: "2a1036eab9fc0b803ed8c73eeb4b8ace-23131907@contact.gandi.net",
   host: "ZAP-Hosting GmbH, Hafenweg 8, 48155 Münster, Allemagne, +49 251 149 811 80.",
   privacy: [
     "Ce site ne dépose aucun cookie et ne mesure pas l'audience. Le serveur garde 14 jours des journaux techniques (adresse IP, heure, page demandée), pour sa sécurité.",
