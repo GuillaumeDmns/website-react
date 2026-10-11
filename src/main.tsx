@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
+import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import Photos from "./pages/Photos";
 import Videos from "./pages/Videos";
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/photos", element: <Photos /> },
       { path: "/videos", element: <Videos /> },
+      { path: "/mentions-legales", element: <Legal /> },
       { path: "*", element: <NotFound /> },
     ],
   },

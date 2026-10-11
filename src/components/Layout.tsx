@@ -1,4 +1,4 @@
-import { NavLink, Outlet, ScrollRestoration } from "react-router-dom";
+import { Link, NavLink, Outlet, ScrollRestoration } from "react-router-dom";
 
 import { links, owner } from "../content";
 import styles from "./Layout.module.css";
@@ -45,6 +45,9 @@ export default function Layout() {
           </li>
           <li>
             <a href={links.linkedin}>LinkedIn</a>
+          </li>
+          <li>
+            <Link to="/mentions-legales">Mentions légales</Link>
           </li>
         </ul>
       </footer>
