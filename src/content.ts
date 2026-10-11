@@ -148,3 +148,13 @@ export const videos: Video[] = [
   { title: "Aftermovie Gala ESCOM", year: 2018, provider: "youtube", id: "m9bQpUPdIl8" },
   { title: "Aftermovie Intégration UTC", year: 2017, provider: "vimeo", id: "255537990" },
 ];
+
+export const legal = {
+  publisher: "Guillaume Damiens, à titre personnel et non commercial.",
+  host: "ZAP-Hosting GmbH, Hafenweg 8, 48155 Münster, Allemagne, +49 251 149 811 80.",
+  privacy: [
+    "Ce site ne dépose aucun cookie et ne mesure pas l'audience. Le serveur garde quelques semaines des journaux techniques (adresse IP, heure, page demandée), pour sa sécurité.",
+    "Les vidéos ne sont chargées depuis YouTube ou Vimeo que lorsque vous lancez leur lecture : ces services s'appliquent alors (YouTube en mode sans cookie, Vimeo sans suivi).",
+  ],
+  app: { label: "Mentions légales et confidentialité de l'app", url: "https://app.guillaumedamiens.com/privacy" },
+};

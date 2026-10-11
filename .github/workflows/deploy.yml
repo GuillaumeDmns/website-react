@@ -80,7 +80,7 @@ jobs:
           SCRIPT
       - name: Check the site
         run: |
-          for page in / /photos /videos; do
+          for page in / /photos /videos /mentions-legales; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "https://guillaumedamiens.com$page")
             echo "$page $code"
             [ "$code" = 200 ]
