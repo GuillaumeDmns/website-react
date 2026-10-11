@@ -11,6 +11,9 @@ export default function Legal() {
       <div className={styles.text}>
         <h2>Éditeur</h2>
         <p>{legal.publisher}</p>
+        <p>
+          Contact : <a href={`mailto:${legal.contact}`}>{legal.contact}</a>
+        </p>
         <h2>Hébergeur</h2>
         <p>{legal.host}</p>
         <h2>Données personnelles</h2>

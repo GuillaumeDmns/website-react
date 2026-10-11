@@ -43,3 +43,8 @@
 .text p {
   margin-top: 0.6rem;
 }
+
+/* Long addresses (the contact relay) wrap on phones */
+.text a {
+  overflow-wrap: anywhere;
+}
