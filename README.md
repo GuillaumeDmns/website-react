@@ -24,7 +24,15 @@ Tout le texte, les liens, les photos et les vidéos sont dans `src/content.ts`.
 
 ## Déployer
 
-Le build est statique : copier `dist/` dans le dossier servi par nginx (`/var/www/gda/build` sur le VPS). Chaque page a sa copie d'`index.html` (`photos/index.html`, `videos/index.html`, produites par `vite.config.ts`) : le serveur n'a pas besoin de renvoyer les adresses inconnues vers l'index. Une nouvelle page du routeur s'ajoute aussi à la liste `pages` de `vite.config.ts`.
+Poser un tag sur un commit de `master` :
+
+```bash
+git tag v1.2.0 && git push origin v1.2.0
+```
+
+`.github/workflows/deploy.yml` builde le site, publie l'archive dans la release GitHub du tag, puis le VPS la télécharge (utilisateur `deploy`, empreinte SHA-256 vérifiée), la décompresse dans `/var/www/guillaumedamiens-site/releases/<version>/` et bascule le lien `current` servi par nginx. Les 5 dernières versions restent : pour revenir en arrière, repointer `current` sur une version précédente. Secrets GitHub du dépôt (les mêmes que `website-back` et `website-app`) : `DEPLOY_HOST`, `DEPLOY_SSH_KEY`, `DEPLOY_KNOWN_HOSTS`, dans un environnement `production`.
+
+Chaque page a sa copie d'`index.html` (`photos/index.html`, `videos/index.html`, produites par `vite.config.ts`) : nginx sert les fichiers tels quels (`try_files $uri $uri/index.html $uri/ =404`, sans redirection vers `/photos/`), sans renvoyer les adresses inconnues vers l'index. Une nouvelle page du routeur s'ajoute aussi à la liste `pages` de `vite.config.ts`.
 
 ## CI
 
