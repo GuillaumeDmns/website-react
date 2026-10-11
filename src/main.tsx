@@ -1,19 +1,29 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { Provider } from "react-redux";
-import store from "./store";
-import { ThemeProvider } from "@mui/material";
-import theme from "./assets/theme.ts";
-import "assets/styles/common.css";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
-createRoot(document.getElementById('root')!).render(
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import Photos from "./pages/Photos";
+import Videos from "./pages/Videos";
+import "./styles/global.css";
+
+// Paths also listed in vite.config.ts (copies of index.html, so that the server finds them)
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/photos", element: <Photos /> },
+      { path: "/videos", element: <Videos /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </Provider>
+    <RouterProvider router={router} />
   </StrictMode>,
-)
+);
