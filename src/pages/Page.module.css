@@ -1,0 +1,32 @@
+.header {
+  max-width: var(--measure);
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.header h1 {
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+}
+
+.header p {
+  margin-top: 0.75rem;
+  color: var(--ink-soft);
+}
+
+.videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+  gap: 2.5rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.videos h2 {
+  margin-top: 0.85rem;
+  font-size: 1.25rem;
+}
+
+.videos p {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
